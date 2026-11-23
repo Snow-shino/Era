@@ -39,7 +39,7 @@ for(let j=0;j<=80;j++){const a=-1.72+3.44*j/80,c=Math.cos(a),s=Math.sin(a);
 class AsciiCoffeeMug extends HTMLElement {
   static get observedAttributes(){return ['mug-tint','screen-bg']}
   constructor(){super();this.attachShadow({mode:'open'});this.shadowRoot.innerHTML=
-    '<style>:host{display:block;width:100%;max-width:232px;aspect-ratio:232/124}canvas{display:block;width:100%;height:100%;border-radius:10px;background:#0c0d0e}</style>'+
+    '<style>:host{display:block;width:100%;max-width:232px;aspect-ratio:232/124}canvas{display:block;width:100%;height:100%;border-radius:10px;background:transparent}</style>'+
     '<canvas role="img" aria-label="A revolving three-dimensional ASCII coffee mug with curling steam"></canvas>';
     this.canvas=this.shadowRoot.querySelector('canvas');this.ctx=this.canvas.getContext('2d');
     this.visible=true;this.running=false;this.raf=0;this.last=0;this.angle=0;this.frame=0;
@@ -66,7 +66,7 @@ class AsciiCoffeeMug extends HTMLElement {
   paint(){
     const c=this.ctx;if(!c)return;
     const bg=this.getAttribute('screen-bg')||'#0d1014',tint=this.getAttribute('mug-tint')||'#ffad5c';
-    c.fillStyle=bg;c.fillRect(0,0,232,124);
+    c.clearRect(0,0,232,124);if(bg!=='transparent'){c.fillStyle=bg;c.fillRect(0,0,232,124);}
     const glyphs=new Array(W*H).fill(' '),depth=new Float32Array(W*H);depth.fill(-Infinity);
     const materials=new Array(W*H).fill('body'),levels=new Float32Array(W*H);
     const ca=Math.cos(this.angle),sa=Math.sin(this.angle),ct=Math.cos(.36),st=Math.sin(.36);
@@ -96,8 +96,10 @@ class AsciiCoffeeMug extends HTMLElement {
       glyphs[cell]=['.',';',':','~'][((j+s)%4)];materials[cell]='steam';levels[cell]=.42+rise*.18;
     }
     // Retro LCD scanlines, subtly visible through character screen.
-    c.fillStyle='rgba(255,207,142,.025)';
-    for(let y=1;y<124;y+=4)c.fillRect(0,y,232,.55);
+    if(bg!=='transparent'){
+      c.fillStyle='rgba(255,207,142,.025)';
+      for(let y=1;y<124;y+=4)c.fillRect(0,y,232,.55);
+    }
     c.textBaseline='top';c.font='7.4px monospace';c.textAlign='left';
     for(let y=0;y<H;y++)for(let x=0;x<W;x++){
       const i=y*W+x,g=glyphs[i];if(g===' ')continue;
