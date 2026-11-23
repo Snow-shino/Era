@@ -77,7 +77,7 @@ class AsciiCoffeeMug extends HTMLElement {
       const yc=p.y*ct-z*st,zc=p.y*st+z*ct;
       const ny=p.ny*ct-nz*st,nnz=p.ny*st+nz*ct;
       const persp=3.5/(4.2-zc);
-      const sx=Math.round(28.4+x*15.3*persp),sy=Math.round(19.6-yc*15.0*persp);
+      const sx=Math.round(28.4+x*13.3*persp),sy=Math.round(19.6-yc*13.0*persp);
       if(sx<0||sy<0||sx>=W||sy>=H)continue;
       const cell=sy*W+sx;if(zc<=depth[cell])continue;
       const brightness=clamp((nx*LIGHT[0]+ny*LIGHT[1]+nnz*LIGHT[2]+.25)*.73,0,1);
@@ -98,7 +98,7 @@ class AsciiCoffeeMug extends HTMLElement {
     // Retro LCD scanlines, subtly visible through character screen.
     c.fillStyle='rgba(255,207,142,.025)';
     for(let y=1;y<124;y+=4)c.fillRect(0,y,232,.55);
-    c.textBaseline='top';c.font='6.5px monospace';c.textAlign='left';
+    c.textBaseline='top';c.font='7.4px monospace';c.textAlign='left';
     for(let y=0;y<H;y++)for(let x=0;x<W;x++){
       const i=y*W+x,g=glyphs[i];if(g===' ')continue;
       c.globalAlpha=materials[i]==='coffee'?.55:materials[i]==='steam'?.36:.78;
