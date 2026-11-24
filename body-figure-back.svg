@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 580" role="img" aria-label="Androgynous athletic figure highlighting trained muscle groups">
+<defs>
+ <linearGradient id="skin" x1="0" y1="0" x2="1" y2=".2"><stop stop-color="#56627d"/><stop offset=".45" stop-color="#30374f"/><stop offset="1" stop-color="#71809c"/></linearGradient>
+ <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#343b58"/><stop offset="1" stop-color="#13182c"/></linearGradient>
+ <linearGradient id="pink" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#ff8bd0"/><stop offset=".65" stop-color="#be528d"/><stop offset="1" stop-color="#642a76"/></linearGradient>
+ <linearGradient id="cyan" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#c1ffff"/><stop offset=".46" stop-color="#4bcee1"/><stop offset="1" stop-color="#287fbc"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="6"/></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="2"/></filter>
+</defs>
+<ellipse cx="140" cy="562" rx="97" ry="9" fill="#ad49ae" opacity=".29" filter="url(#glow)"/>
+<g stroke="#8290ac" stroke-width="1.2" stroke-linejoin="round">
+<!-- feet / legs -->
+<path d="M88 287 Q79 318 85 361 L94 427 100 484 96 538 Q91 550 75 559 Q70 566 80 569 L115 570 Q128 568 124 557 L119 545 119 487 130 414 140 348 150 414 162 487 161 545 156 557 Q151 568 165 570 L200 569 Q210 566 204 559 Q188 550 184 538 L181 484 187 427 196 361 Q202 316 192 287 Z" fill="url(#skin)"/>
+<!-- arms -->
+<path d="M88 136 Q66 126 57 145 Q49 162 45 196 L34 248 Q30 269 23 303 L20 340 Q17 353 12 366 Q7 381 16 386 Q20 388 22 377 Q27 391 32 385 L37 365 Q44 349 47 332 L67 274 83 217 95 175Z" fill="url(#skin)"/>
+<path d="M192 136 Q214 126 223 145 Q231 162 235 196 L246 248 Q250 269 257 303 L260 340 Q263 353 268 366 Q273 381 264 386 Q260 388 258 377 Q253 391 248 385 L243 365 Q236 349 233 332 L213 274 197 217 185 175Z" fill="url(#skin)"/>
+<!-- torso neck -->
+<path d="M120 104 L120 119 Q111 130 92 135 Q88 140 88 159 Q93 191 99 228 L90 267 Q85 284 91 302 Q108 317 140 319 Q172 317 189 302 Q195 284 190 267 L181 228 Q187 191 192 159 Q192 139 188 135 Q169 130 160 119 L160 104Z" fill="url(#skin)"/>
+<!-- face -->
+<path d="M109 49 Q110 22 141 23 Q170 25 171 51 L173 72 Q170 88 157 101 Q148 108 140 110 Q132 108 123 101 Q111 87 108 71Z" fill="url(#skin)"/>
+<path d="M111 59 Q122 51 128 49 M152 49 Q163 51 170 59" fill="none" stroke="#a2abc1" opacity=".25"/>
+<!-- short androgynous side-swept hair -->
+<path d="M108 66 Q97 44 108 27 Q116 11 138 10 Q166 2 174 24 Q183 35 171 68 L168 44 Q155 36 153 22 Q140 38 118 40 Q117 54 108 66Z" fill="url(#dark)" stroke="#a4a8c5" stroke-width="2"/>
+<path d="M112 30 Q125 19 151 20 M124 34 Q143 25 155 19 M154 22 Q170 29 170 45" fill="none" stroke="#b2a4c8" opacity=".55"/>
+</g>
+<!-- chest / fitted athletic upper -->
+<path d="M91 149 Q107 129 124 134 L140 144 156 134 Q173 129 189 149 L181 197 Q160 207 140 203 Q120 207 99 197Z" fill="#191f36" stroke="#8998b9" stroke-opacity=".55"/>
+<path d="M94 150 Q113 138 136 148 L135 189 Q113 198 99 191Z M186 150 Q167 138 144 148 L145 189 Q167 198 181 191Z" fill="url(#pink)" opacity=".48" stroke="#e68cba" stroke-opacity=".6"/>
+<!-- shoulder muscles -->
+<path d="M90 139 Q75 132 65 146 Q57 161 57 181 L72 195 Q88 177 95 154Z M190 139 Q205 132 215 146 Q223 161 223 181 L208 195 Q192 177 185 154Z" fill="url(#pink)" stroke="#ff8bd0" opacity=".91"/>
+<!-- biceps -->
+<path d="M61 188 Q46 201 45 231 L57 247 Q71 229 75 200Z M219 188 Q234 201 235 231 L223 247 Q209 229 205 200Z" fill="url(#pink)" opacity=".7"/>
+<!-- forearm highlights -->
+<path d="M44 258 Q34 278 28 316 L39 329 Q50 298 60 265Z M236 258 Q246 278 252 316 L241 329 Q230 298 220 265Z" fill="url(#pink)" opacity=".48"/>
+<!-- ab shapes -->
+<g fill="url(#cyan)" stroke="#bdf6ff" stroke-opacity=".4" stroke-width="1">
+<path d="M117 204 Q127 207 137 205 L137 225 Q124 231 117 223Z M143 205 Q153 207 163 204 L163 223 Q156 231 143 225Z"/>
+<path d="M115 230 Q129 233 137 230 L137 250 Q124 257 116 248Z M143 230 Q151 233 165 230 L164 248 Q156 257 143 250Z"/>
+<path d="M114 256 Q126 260 137 256 L137 280 Q124 290 116 278Z M143 256 Q154 260 166 256 L164 278 Q156 290 143 280Z"/>
+<path d="M100 218 Q105 237 101 264 L115 286 111 251Z M180 218 Q175 237 179 264 L165 286 169 251Z" opacity=".67"/>
+</g>
+<!-- waist / shorts -->
+<path d="M93 284 Q116 296 140 296 Q164 296 187 284 L192 334 145 337 140 329 135 337 88 334Z" fill="url(#dark)" stroke="#9ba8c7" stroke-opacity=".6"/>
+<!-- quads, hamstrings and calves -->
+<path d="M92 338 Q108 330 134 343 L126 398 110 445 Q94 432 91 404 Q84 370 92 338Z M188 338 Q172 330 146 343 L154 398 170 445 Q186 432 189 404 Q196 370 188 338Z" fill="url(#cyan)" stroke="#abf8ff" opacity=".78"/>
+<path d="M99 442 Q113 454 116 479 L111 538 99 544 Q93 515 94 483Z M181 442 Q167 454 164 479 L169 538 181 544 Q187 515 186 483Z" fill="url(#pink)" opacity=".85"/>
+<path d="M85 380 Q89 414 102 439 M195 380 Q191 414 178 439 M124 368 Q118 403 111 434 M156 368 Q162 403 169 434" fill="none" stroke="#fff" stroke-opacity=".27" stroke-width="1.5"/>
+<!-- face simplified ambiguous and androgynous -->
+<path d="M121 69 Q130 66 135 69 M145 69 Q151 66 159 69" fill="none" stroke="#a0a9c4" opacity=".55"/>
+<path d="M139 75 136 88 143 88 M132 96 Q140 99 148 96" fill="none" stroke="#b9c0d2" opacity=".35"/>
+<!-- dimensional highlights -->
+<path d="M111 109 Q140 127 168 109 M92 154 Q104 162 108 183 M188 154 Q176 162 172 183" fill="none" stroke="#d4ccff" stroke-opacity=".18" stroke-width="2"/>
+<!-- Rear anatomy view overlays: shoulder blades, lats, spinal erectors, glutes, hamstrings -->
+<path d="M111 48 Q124 31 141 33 Q160 32 171 50 L170 85 Q164 105 140 109 Q116 105 110 84Z" fill="url(#dark)" stroke="#827da4" stroke-width="1.5"/>
+<path d="M106 50 Q108 23 128 17 Q154 8 172 30 L173 69 Q166 51 155 45 Q131 52 107 64Z" fill="#3b3553" stroke="#9a8eaf" stroke-width="2"/>
+<path d="M95 151 Q109 135 120 133 L140 148 160 133 Q171 135 185 151 L179 219 162 255 156 284 140 301 124 284 118 255 101 219Z" fill="url(#dark)" stroke="#8294b6" stroke-width="1.4"/>
+<path d="M95 149 Q110 142 135 151 L130 197 113 222 100 209Z M185 149 Q170 142 145 151 L150 197 167 222 180 209Z" fill="url(#pink)" opacity=".66" stroke="#ef9bcc"/>
+<path d="M105 207 Q122 221 129 233 L135 263 123 283 112 257Z M175 207 Q158 221 151 233 L145 263 157 283 168 257Z" fill="url(#cyan)" opacity=".71" stroke="#b7faff"/>
+<path d="M138 148 L138 285 M142 148 L142 285" stroke="#93b6c4" stroke-opacity=".5" stroke-width="2" fill="none"/>
+<path d="M91 288 Q115 307 139 302 L139 328 Q113 342 91 328Z M189 288 Q165 307 141 302 L141 328 Q167 342 189 328Z" fill="url(#pink)" opacity=".5"/>
+<path d="M92 342 Q111 338 132 346 L121 418 103 446 Q91 417 88 391Z M188 342 Q169 338 148 346 L159 418 177 446 Q189 417 192 391Z" fill="url(#cyan)" opacity=".64" stroke="#9df4fa"/>
+<path d="M95 449 Q108 455 113 483 L109 529 99 539 93 498Z M185 449 Q172 455 167 483 L171 529 181 539 187 498Z" fill="url(#pink)" opacity=".85"/>
+</svg>
