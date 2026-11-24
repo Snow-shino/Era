@@ -227,9 +227,17 @@ html[data-era-theme="medieval"] .eyebrow{font-family:Georgia,serif}
 html[data-era-theme="cyberpunk"]{--bg:#090d1b;--panel:#111a2b;--panel2:#1b2541;--stroke:#36516b;--text:#edf5ff;--muted:#b3c4d8;--orange:#ed67be;--green:#54dccf;--water:#50d4e7;--water-deep:#176e9d;--selected:#392141;--selectionText:#ffb5df;--accentText:#130e22;--swatch-one:#090d1b;--swatch-two:#1b2541;--swatch-three:#ed67be;--swatch-four:#50d4e7;--theme-glow:0 0 15px #a94ad41c}
 html[data-era-theme="cyberpunk"] body{background:radial-gradient(ellipse at 100% 0%,#27154b 0%,transparent 46%),radial-gradient(ellipse at 0% 100%,#06323d 0%,transparent 47%),var(--bg);background-attachment:fixed}
 html[data-era-theme="cyberpunk"] .folderSlider{box-shadow:0 0 15px #ed67be35}
+
+/* Theme texture layers: small local SVG assets, kept behind content */
+html[data-era-theme="solarpunk"] .nutritionhero,html[data-era-theme="solarpunk"] .physicalIntro{background-image:linear-gradient(90deg,#102c21ed,#102c21ac),url('./themes/solarpunk.svg');background-size:cover;background-position:center}
+html[data-era-theme="crt"] .nutritionhero,html[data-era-theme="crt"] .physicalIntro{background-image:linear-gradient(90deg,#0b1811ee,#0b1811b8),url('./themes/crt.svg');background-size:cover}
+html[data-era-theme="brutalist"] .nutritionhero,html[data-era-theme="brutalist"] .physicalIntro{background-image:linear-gradient(90deg,#171717f0,#171717a0),url('./themes/brutalist.svg');background-size:cover}
+html[data-era-theme="medieval"] .nutritionhero,html[data-era-theme="medieval"] .physicalIntro{background-image:linear-gradient(90deg,#211a1df4,#211a1db0),url('./themes/medieval.svg');background-size:cover}
+html[data-era-theme="cyberpunk"] .nutritionhero,html[data-era-theme="cyberpunk"] .physicalIntro{background-image:linear-gradient(90deg,#111a2bed,#111a2b99),url('./themes/cyberpunk.svg');background-size:cover}
+html[data-era-theme]:not([data-era-theme="classic"]) .physicalIntro{padding:10px;border-radius:12px}
 </style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody">
 <section class="themeSettings" aria-label="Appearance settings">
-<label for="eraThemeSelect">Themes <span class="themeChevron" aria-hidden="true">▾</span></label>
+<label for="eraThemeSelect" class="themePickerLabel">Themes <span class="themeChevron" aria-hidden="true">▾</span></label>
 <select id="eraThemeSelect" aria-label="Choose your app theme">
 <option value="classic">Classic (current)</option>
 <option value="solarpunk">Solarpunk</option>
@@ -270,7 +278,7 @@ html[data-era-theme="cyberpunk"] .folderSlider{box-shadow:0 0 15px #ed67be35}
 <section class="panel"><h2>Two meals worth repeating</h2><p><b>Easy protein Alfredo:</b> cook protein pasta; warm an Alfredo sauce with frozen spinach/peas, and stir in pre-cooked chicken or beans. Add pasta water to loosen.</p><p><b>Low-effort burrito bowl:</b> rice, black beans, pre-cooked chicken or tofu, frozen peppers, salsa and a little cheese.</p><p class="fine">No fixed calorie target yet. Start with consistent meals and adjust portions to your hunger and training.</p></section>
 </div>
 <div id="settingsHolder" hidden><section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.7.0';
+const APP_VERSION='1.7.1';
 const PLAN=[
 {d:'Mon',title:'Easy Run + Mobility',type:'CARDIO',duration:'25–40 min',focus:'Build an aerobic base at a conversational pace.',cardio:'20–30 min easy',ex:[['Warm-up walk','5 min','check'],['Easy run / run-walk','20–30 min','check'],['Hip and ankle mobility','5 min','check']]},
 {d:'Tue',title:'Dynos + Bouldering',type:'CLIMBING',duration:'60 min',focus:'Explosiveness, landing control and coordination.',cardio:'10 min easy',ex:[['Bike + easy routes','5 min bike + 10 min easy climbing','check'],['Dyno practice','4–6 quality attempts with full rest','check'],['Coordination climbing','15 min controlled dynamic moves','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check']]},
@@ -337,7 +345,7 @@ $('openDrawer').onclick=()=>toggleDrawer(true);$('closeDrawer').onclick=()=>togg
 function switchTab(n){const nutrition=n==='nutrition';$('physicalView').hidden=nutrition;$('nutritionView').hidden=!nutrition;$('physicalTab').setAttribute('aria-selected',String(!nutrition));$('nutritionTab').setAttribute('aria-selected',String(nutrition));document.querySelector('.folderTabs').classList.toggle('nutritionSelected',nutrition);const shown=nutrition?$('nutritionView'):$('physicalView');shown.classList.remove('paneEnter');void shown.offsetWidth;shown.classList.add('paneEnter')}
 $('physicalTab').onclick=()=>switchTab('physical');$('nutritionTab').onclick=()=>switchTab('nutrition');
 let swipe=null;document.addEventListener('touchstart',e=>{if(e.touches.length===1)swipe={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});document.addEventListener('touchend',e=>{if(!swipe||e.changedTouches.length!==1)return;const dx=e.changedTouches[0].clientX-swipe.x,dy=e.changedTouches[0].clientY-swipe.y;if(Math.abs(dx)>85&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0&&!document.body.classList.contains('drawer-open'))toggleDrawer(true);if(dx>0&&document.body.classList.contains('drawer-open'))toggleDrawer(false)}swipe=null},{passive:true});
-$('copyQuestions').onclick=()=>{const q='Favorite easy meals? Grocery budget (could we try $120–$150 per two weeks)? Typical meals and schedule? Meal prep or quick cooking? Foods that keep well in the freezer/pantry?';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(q).then(()=>alert('Questions copied. Paste into ChatGPT.'));else prompt('Copy:',q)};
+// The optional copy-questions button was removed from Nutrition; do not attach a handler to a missing element.
 
 // Nutrition data shares the same storage key as workouts so installed app history persists.
 if(!storage.nutrition||typeof storage.nutrition!=='object')storage.nutrition={};
@@ -385,7 +393,7 @@ const ERA_THEMES={
  cyberpunk:{description:'Midnight blue with controlled cyan and magenta glow.',tint:'#d785e8',bg:'transparent'}
 };
 function applyEraTheme(theme){
- const key=Object.hasOwn(ERA_THEMES,theme)?theme:'classic';
+ const key=Object.prototype.hasOwnProperty.call(ERA_THEMES,theme)?theme:'classic';
  document.documentElement.dataset.eraTheme=key;
  $('eraThemeSelect').value=key;
  $('themeDescription').textContent=ERA_THEMES[key].description;
