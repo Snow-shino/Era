@@ -435,6 +435,26 @@ body.bodyMode .folderTabs{margin-top:12px!important;margin-bottom:18px!important
 @media(max-width:370px){.muscleStage{min-height:480px}.bodyFigure{height:467px}.bodyMapStats{min-height:472px;padding-top:24px;gap:7px 38%}.muscleCallout{min-height:74px;padding:7px 6px}.muscleCalloutValue{font-size:21px}.muscleCalloutLabel{font-size:10px}}
 @media(min-width:540px){.muscleStage{min-height:620px}.bodyFigure{height:603px}.bodyMapStats{min-height:603px;gap:11px 46%;padding:55px 4px 20px}.muscleCallout{min-height:98px;padding:11px 13px}.muscleCalloutLabel{font-size:14px}.muscleCalloutValue{font-size:27px}}
 @media(prefers-reduced-motion:reduce){.bodyLevelTrack span{transition:none}}
+
+/* v1.11.2: stacked menu and compact expandable weekly review rows */
+.drawerNav{grid-template-columns:minmax(0,1fr);gap:8px}
+.drawerNav button{width:100%;text-align:left;padding:14px 16px;font-weight:800}
+.reviewStats{display:flex;flex-direction:column;gap:9px;margin:12px 0 14px}
+.reviewStat{display:block;min-width:0;padding:0;overflow:hidden;border-radius:12px;background:var(--panel2);border:1px solid var(--stroke)}
+.reviewStatSummary{display:flex;align-items:center;gap:11px;cursor:pointer;list-style:none;min-height:58px;padding:12px 14px}
+.reviewStatSummary::-webkit-details-marker,.reviewDaysToggle::-webkit-details-marker{display:none}
+.reviewStatSummary::marker,.reviewDaysToggle::marker{content:""}
+.reviewStatLabel{font-size:14px;font-weight:750;color:var(--text);flex:1}
+.reviewStatSummary strong{font-size:19px;line-height:1.2;color:var(--text);white-space:nowrap}
+.reviewStatChevron{color:var(--orange);font-size:23px;line-height:1;transition:transform .18s}
+.reviewStat[open] .reviewStatChevron{transform:rotate(180deg)}
+.reviewStatDetail{border-top:1px solid var(--stroke);padding:12px 14px;color:var(--muted);font-size:12px;line-height:1.45}
+.reviewDays{margin:12px 0;border:1px solid var(--stroke);border-radius:12px;overflow:hidden;background:var(--panel2)}
+.reviewDaysToggle{padding:14px;font-size:14px;font-weight:800;color:var(--text);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.reviewDaysToggle:after{content:"⌄";color:var(--orange);font-size:22px;transition:transform .18s}
+.reviewDays[open] .reviewDaysToggle:after{transform:rotate(180deg)}
+.reviewDaysBody{padding:0 12px 12px;border-top:1px solid var(--stroke)}
+@media(prefers-reduced-motion:reduce){.reviewStatChevron,.reviewDaysToggle:after{transition:none}}
 </style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Athletic Era menu" aria-hidden="true"><div class="shell"><h2 id="drawerTitle">Menu</h2><button id="closeDrawer" class="gear" aria-label="Close menu">×</button></div>
 <nav class="drawerNav" aria-label="Menu pages">
   <button id="weeklyReviewNav" type="button" aria-current="page">Weekly Review</button>
@@ -530,7 +550,7 @@ body.bodyMode .folderTabs{margin-top:12px!important;margin-bottom:18px!important
  <p class="bodyDisclaimer">XP reflects logged training effort, not measured muscle size or strength. Percentages show progress toward the next muscle level. You start at zero and earn XP by recording exercises.</p>
 </section>
 <div id="settingsHolder" hidden<section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.11.1';
+const APP_VERSION='1.11.2';
 const PLAN=[
 {d:'Mon',title:'Climbing + Arms & Abs',type:'CLIMBING',duration:'70–85 min',focus:'Warm fingers progressively, then climb first at a relaxed, technique-focused intensity. After climbing, complete three Momo-inspired circuits: two rounds each, moderate loads, about 45–60 seconds between rounds. Avoid training to failure so Tuesday dynos can stay sharp.',cardio:'5–8 min easy',ex:[['Easy bike + shoulder circles','5 min cardio and gentle arm movement','check'],['Technique bouldering','25–30 min easy/moderate; 3 silent-feet climbs + controlled hip turns; avoid max dynos today','check'],['Incline bench Arnold press','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Dumbbell lateral raises','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Hammer curls','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Dumbbell skull crushers','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Cable crunch','Circuit C: 2 × 15–20','lift',2,15,20,2.5,'CIRCUIT C · ABS · 2 ROUNDS'],['Decline reverse crunch','Circuit C: 2 × 10–15','check',0,0,0,0,'CIRCUIT C · ABS · 2 ROUNDS'],['Easy walk or bike','5–8 min at conversational pace','check'],['Finger tendon glides + wrist circles','10 smooth tendon glides and 10 wrist circles each direction; no forceful stretches','check'],['Feet-supported large-edge finger primer','3 × 7 sec on a comfortable 20–25 mm edge with feet on ground, open hand/half crimp, easy 3/10 effort; 30 sec rest','check'],['Scapular pulls on large jugs','2 × 5 reps; elbows mostly straight, shoulders engaged, feet-assisted as needed','check']]},
 {d:'Tue',title:'Climbing + Dynos',type:'CLIMBING',duration:'55–65 min',focus:'Foot precision, explosive coordination and landing control. If hands, elbows or shoulders are fatigued after Monday, make this an easy technique session instead of max-power dynos.',cardio:'10 min easy',ex:[['Bike + very easy jug routes','5 min bike + 10 min big-hold climbing; gradually increase demand','check'],['Dyno timing and landing practice','4–6 high-quality attempts at submaximal intensity with 2–3 min rest; soft landing, stop as power fades','check'],['Coordination climbing','10–15 min: momentum from legs/hips, eyes on target, quiet catches','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check'],['Tendon glides + band shoulder warm-up','10 gentle finger glides + 10 band external rotations; avoid aggressive finger stretching','check'],['Feet-on edge recruitment','3 × 5 sec gently loading a large 20–25 mm edge, open hand or half crimp; no max effort','check'],['Silent-feet warm-up','2 easy traverses: place feet precisely without scraping or readjusting','check'],['Controlled deadpoint drill','3 × 3 moves: drive from toes, pause at the high point, catch comfortably','check']]},
@@ -735,7 +755,15 @@ function renderWeeklyReview(){
  make('h3',{text:completed+' completed session'+(completed===1?'':'s')},intro);
  make('p',{text:activityDays+' of 7 days have logged activity. Only saved workouts and entries count.'},intro);
  const stats=make('div',{class:'reviewStats',id:'reviewStats'},root);
- const stat=(label,value,detail)=>{const box=make('div',{class:'reviewStat'},stats);make('span',{class:'reviewStatLabel',text:label},box);make('strong',{text:String(value)},box);if(detail)make('small',{text:detail},box)};
+ const stat=(label,value,detail)=>{
+  const box=make('details',{class:'reviewStat'},stats);
+  const summary=make('summary',{class:'reviewStatSummary'},box);
+  make('span',{class:'reviewStatLabel',text:label},summary);
+  make('strong',{text:String(value)},summary);
+  make('span',{class:'reviewStatChevron','aria-hidden':'true',text:'⌄'},summary);
+  const inner=make('div',{class:'reviewStatDetail'},box);
+  make('span',{text:detail||'No additional details logged.'},inner);
+};
  stat('Climbing',climbDays,'days logged');
  stat('Lifting',liftDays,'days logged');
  stat('Strength sets',liftSets,'sets with reps + weight');
@@ -743,10 +771,11 @@ function renderWeeklyReview(){
  stat('Running',runMinutes+'m','explicit run logs');
  stat('Protein',Math.round(protein)+'g',proteinDays+' logged days');
  stat('Water',Math.round(water/29.5735295625)+' oz',waterDays+' logged days');
- const section=make('section',{class:'reviewDays'},root);
- make('h3',{text:'Day by day'},section);
+ const section=make('details',{class:'reviewDays'},root);
+ make('summary',{class:'reviewDaysToggle',text:'Day by day'},section);
+ const daysBody=make('div',{class:'reviewDaysBody'},section);
  for(const item of dayData){
-  const line=make('div',{class:'reviewDay'},section);
+  const line=make('div',{class:'reviewDay'},daysBody);
   make('span',{class:'reviewDayName',text:item.day},line);
   const detail=item.isFuture?'Upcoming':item.finished?'Session completed':item.climbed&&item.lifted?'Climbed + lifted':item.climbed?'Climbing logged':item.lifted?'Lifting logged':item.run>0?'Run '+item.run+' min':item.doneCount>0?item.doneCount+' exercises checked':item.minutes>0?'Cardio '+item.minutes+' min':'No activity logged';
   make('span',{class:'reviewDayDetail',text:detail},line);
