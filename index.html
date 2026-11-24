@@ -494,6 +494,10 @@ body.training-info-open{overflow:hidden}
 /* v1.11.5: smaller info button anchored inside workout card, bottom-right */
 .workoutSessionPanel{position:relative;padding-bottom:45px!important}
 .workoutSessionPanel .trainingInfoButton{position:absolute;right:14px;bottom:12px;width:27px;height:27px;min-width:27px;min-height:27px;font-size:17px;border-radius:50%;z-index:1}
+
+/* v1.11.6 side menu from left, horizontal content navigation from both directions */
+.drawer{left:0;right:auto;border-left:0;border-right:1px solid #454958;transform:translateX(-105%)}
+body.drawer-open .drawer{transform:translateX(0)}
 </style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Athletic Era menu" aria-hidden="true"><div class="shell"><h2 id="drawerTitle">Menu</h2><button id="closeDrawer" class="gear" aria-label="Close menu">×</button></div>
 <nav class="drawerNav" aria-label="Menu pages">
   <button id="weeklyReviewNav" type="button" aria-current="page">Weekly Review</button>
@@ -614,7 +618,7 @@ body.training-info-open{overflow:hidden}
   <p>Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p>
  </section>
 </div></main><script>
-const APP_VERSION='1.11.5';
+const APP_VERSION='1.11.6';
 const PLAN=[
 {d:'Mon',title:'Climbing + Arms & Abs',type:'CLIMBING',duration:'70–85 min',focus:'Warm fingers progressively, then climb first at a relaxed, technique-focused intensity. After climbing, complete three Momo-inspired circuits: two rounds each, moderate loads, about 45–60 seconds between rounds. Avoid training to failure so Tuesday dynos can stay sharp.',cardio:'5–8 min easy',ex:[['Easy bike + shoulder circles','5 min cardio and gentle arm movement','check'],['Technique bouldering','25–30 min easy/moderate; 3 silent-feet climbs + controlled hip turns; avoid max dynos today','check'],['Incline bench Arnold press','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Dumbbell lateral raises','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Hammer curls','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Dumbbell skull crushers','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Cable crunch','Circuit C: 2 × 15–20','lift',2,15,20,2.5,'CIRCUIT C · ABS · 2 ROUNDS'],['Decline reverse crunch','Circuit C: 2 × 10–15','check',0,0,0,0,'CIRCUIT C · ABS · 2 ROUNDS'],['Easy walk or bike','5–8 min at conversational pace','check'],['Finger tendon glides + wrist circles','10 smooth tendon glides and 10 wrist circles each direction; no forceful stretches','check'],['Feet-supported large-edge finger primer','3 × 7 sec on a comfortable 20–25 mm edge with feet on ground, open hand/half crimp, easy 3/10 effort; 30 sec rest','check'],['Scapular pulls on large jugs','2 × 5 reps; elbows mostly straight, shoulders engaged, feet-assisted as needed','check']]},
 {d:'Tue',title:'Climbing + Dynos',type:'CLIMBING',duration:'55–65 min',focus:'Foot precision, explosive coordination and landing control. If hands, elbows or shoulders are fatigued after Monday, make this an easy technique session instead of max-power dynos.',cardio:'10 min easy',ex:[['Bike + very easy jug routes','5 min bike + 10 min big-hold climbing; gradually increase demand','check'],['Dyno timing and landing practice','4–6 high-quality attempts at submaximal intensity with 2–3 min rest; soft landing, stop as power fades','check'],['Coordination climbing','10–15 min: momentum from legs/hips, eyes on target, quiet catches','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check'],['Tendon glides + band shoulder warm-up','10 gentle finger glides + 10 band external rotations; avoid aggressive finger stretching','check'],['Feet-on edge recruitment','3 × 5 sec gently loading a large 20–25 mm edge, open hand or half crimp; no max effort','check'],['Silent-feet warm-up','2 easy traverses: place feet precisely without scraping or readjusting','check'],['Controlled deadpoint drill','3 × 3 moves: drive from toes, pause at the high point, catch comfortably','check']]},
@@ -983,7 +987,31 @@ function switchTab(n){
  if(mode==='body')renderBodyProgress();
 }
 $('physicalTab').onclick=()=>switchTab('physical');$('nutritionTab').onclick=()=>switchTab('nutrition');$('bodyTab').onclick=()=>switchTab('body');
-let swipe=null;document.addEventListener('touchstart',e=>{if(e.touches.length===1)swipe={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});document.addEventListener('touchend',e=>{if(!swipe||e.changedTouches.length!==1)return;const dx=e.changedTouches[0].clientX-swipe.x,dy=e.changedTouches[0].clientY-swipe.y;if(Math.abs(dx)>85&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0&&!document.body.classList.contains('drawer-open'))toggleDrawer(true);if(dx>0&&document.body.classList.contains('drawer-open'))toggleDrawer(false)}swipe=null},{passive:true});
+/* Swipe navigation: left-edge -> menu; content -> previous/next tab; left swipe closes menu. */
+let swipe=null;
+const ERA_TAB_ORDER=['physical','nutrition','body'];
+document.addEventListener('touchstart',e=>{
+ if(e.touches.length!==1){swipe=null;return}
+ const t=e.touches[0],target=e.target;
+ swipe={x:t.clientX,y:t.clientY,target,blocked:!!target.closest('input,textarea,select,button,summary,details[open],.nudgeOverlay,.trainingInfoOverlay')};
+},{passive:true});
+document.addEventListener('touchcancel',()=>{swipe=null},{passive:true});
+document.addEventListener('touchend',e=>{
+ const start=swipe;swipe=null;
+ if(!start||e.changedTouches.length!==1||start.blocked)return;
+ const end=e.changedTouches[0],dx=end.clientX-start.x,dy=end.clientY-start.y;
+ if(Math.abs(dx)<75||Math.abs(dx)<Math.abs(dy)*1.5)return;
+ if(document.body.classList.contains('drawer-open')){
+  if(dx<0)toggleDrawer(false);
+  return;
+ }
+ if(!$('nudgeOverlay').hidden||!$('trainingInfoOverlay').hidden)return;
+ if(dx>0&&start.x<=44){toggleDrawer(true);return}
+ if(!start.target.closest('main'))return;
+ const active=ERA_TAB_ORDER.findIndex(n=>$(n+'Tab').getAttribute('aria-selected')==='true');
+ const nextIndex=Math.max(0,Math.min(ERA_TAB_ORDER.length-1,active+(dx<0?1:-1)));
+ if(nextIndex!==active)switchTab(ERA_TAB_ORDER[nextIndex]);
+},{passive:true});
 // The optional copy-questions button was removed from Nutrition; do not attach a handler to a missing element.
 
 // Nutrition data shares the same storage key as workouts so installed app history persists.
