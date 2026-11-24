@@ -618,12 +618,6 @@ $('reviewNext').onclick=()=>{if(reviewWeekOffset<0)reviewWeekOffset++;renderWeek
 function reviewWeekStart(){
  const d=monday(new Date());d.setDate(d.getDate()+reviewWeekOffset*7);return d;
 }
-function reviewCard(label,value,detail){
- const box=make('div',{class:'reviewStat'},$('reviewStats'));
- make('span',{class:'reviewStatLabel',text:label},box);
- make('strong',{text:String(value)},box);
- if(detail)make('small',{text:detail},box);
-}
 function renderWeeklyReview(){
  const root=$('reviewContent');if(!root)return;
  const begin=reviewWeekStart(),end=new Date(begin);end.setDate(end.getDate()+6);
