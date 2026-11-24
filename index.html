@@ -235,6 +235,48 @@ html[data-era-theme="brutalist"] .nutritionhero,html[data-era-theme="brutalist"]
 html[data-era-theme="medieval"] .nutritionhero,html[data-era-theme="medieval"] .physicalIntro{background-image:linear-gradient(90deg,#211a1df4,#211a1db0),url('./themes/medieval.svg');background-size:cover}
 html[data-era-theme="cyberpunk"] .nutritionhero,html[data-era-theme="cyberpunk"] .physicalIntro{background-image:linear-gradient(90deg,#111a2bed,#111a2b99),url('./themes/cyberpunk.svg');background-size:cover}
 html[data-era-theme]:not([data-era-theme="classic"]) .physicalIntro{padding:10px;border-radius:12px}
+
+/* v1.7.2: three-pane time-aware hero: coffee | dusk-to-dawn | water */
+.dashboardHero{grid-template-columns:minmax(0,.82fr) minmax(0,1.12fr) minmax(0,1.76fr);gap:7px;min-height:146px}
+.dashboardHero .mugCompact{padding:2px;min-height:146px;background:var(--panel)}
+.dashboardHero .mugCompact ascii-coffee-mug{width:100%;max-width:none;transform:scale(1.3)}
+.sleepClock{position:relative;min-width:0;min-height:146px;overflow:hidden;isolation:isolate;border-radius:14px;background:#171525;border:1px solid var(--stroke);display:flex;align-items:flex-end;justify-content:center}
+.sleepSky{position:absolute;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(180deg,#13162e 0%,#36284b 48%,#bb715f 100%);transition:background 1s}
+.sleepSky:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,13,26,.12),rgba(8,10,23,.18) 45%,rgba(6,9,18,.58));pointer-events:none}
+.sleepOrb{position:absolute;right:16%;top:12%;width:17px;height:17px;border-radius:50%;background:#f6d5b2;box-shadow:0 0 16px #ffd3ad66;opacity:.75}
+.sleepHorizon{position:absolute;inset:auto 0 0;height:30%;background:linear-gradient(145deg,transparent 0 34%,#1b1d32 35% 54%,transparent 55%),linear-gradient(20deg,#171628 0 36%,transparent 37%),linear-gradient(160deg,transparent 0 40%,#101828 41% 100%);opacity:.67}
+.sleepContent{position:relative;width:100%;padding:9px 4px 13px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;color:#ffeddf}
+.sleepCaption{font-weight:700;font-size:9px;letter-spacing:1.25px;opacity:.65}
+.sleepCountdown{font-size:clamp(14px,3.1vw,22px);font-weight:800;line-height:1.05;letter-spacing:-.6px;white-space:nowrap;background:linear-gradient(180deg,#fff8ed,#f2bdc0aa);background-clip:text;-webkit-background-clip:text;color:transparent;opacity:.86;font-variant-numeric:tabular-nums}
+.sleepMini{white-space:nowrap;font-size:9px;letter-spacing:.1px;opacity:.73;color:#d7c4ca}
+.sleepMini strong{font-size:10px;letter-spacing:0;color:#ffe1cc;font-weight:700}
+.sleepClock[data-period="morning"] .sleepSky{background:linear-gradient(180deg,#253b56 0%,#7378a0 53%,#f1ac83 100%)}
+.sleepClock[data-period="morning"] .sleepOrb{background:#ffdfaf;box-shadow:0 0 22px #f8bc80;top:25%;right:13%}
+.sleepClock[data-period="day"] .sleepSky{background:linear-gradient(180deg,#153e56 0%,#347589 55%,#c2a3a0 100%)}
+.sleepClock[data-period="day"] .sleepOrb{background:#fff2c7;top:16%;right:20%}
+.sleepClock[data-period="evening"] .sleepSky{background:linear-gradient(180deg,#29233d 0%,#894d73 55%,#ec906e 100%)}
+.sleepClock[data-period="night"] .sleepSky{background:linear-gradient(180deg,#090d27 0%,#222244 58%,#5a4166 100%)}
+.sleepClock[data-period="night"] .sleepOrb{background:#e6ddfb;box-shadow:6px -2px 0 -1px #121833;top:14%}
+.dashboardHero .hydrationCard{min-height:146px;padding:8px;gap:3px}
+.dashboardHero .hydrationMain{grid-template-columns:19px minmax(0,1fr) 48px;gap:4px;min-height:84px}
+.dashboardHero .waterTank{height:73px;width:19px}
+.dashboardHero .hydrationStats strong{font-size:21px}
+.dashboardHero .hydrationStats span{font-size:9px;line-height:1.2}
+.dashboardHero .waterActions{gap:5px}
+.dashboardHero .waterActions button{min-height:34px;padding:5px 1px;font-size:10px}
+.dashboardHero .heroLabel{font-size:9px;letter-spacing:1px}
+.dashboardHero .waterGoalEdit{font-size:9px}
+@media(max-width:390px){
+  .dashboardHero{grid-template-columns:minmax(0,.8fr) minmax(0,1.13fr) minmax(0,1.8fr);gap:5px}
+  .dashboardHero .hydrationCard{padding:6px}
+  .dashboardHero .hydrationMain{grid-template-columns:16px minmax(0,1fr) 43px;gap:3px}
+  .dashboardHero .waterTank{width:16px;height:72px}
+  .dashboardHero .waterActions button{font-size:9px}
+  .dashboardHero .hydrationStats strong{font-size:19px}
+  .sleepMini{font-size:8px}.sleepMini strong{font-size:9px}
+  .sleepContent{padding:9px 2px}
+}
+@media(min-width:550px){.dashboardHero{gap:10px}.sleepCountdown{font-size:21px}.sleepMini{font-size:11px}.sleepMini strong{font-size:12px}}
 </style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody">
 <section class="themeSettings" aria-label="Appearance settings">
 <label for="eraThemeSelect" class="themePickerLabel">Themes <span class="themeChevron" aria-hidden="true">▾</span></label>
@@ -255,7 +297,16 @@ html[data-era-theme]:not([data-era-theme="classic"]) .physicalIntro{padding:10px
   <button id="openDrawer" class="gear" aria-label="Open settings">☰</button>
 </header>
 <section class="dashboardHero" aria-label="Today's dashboard">
-  <div class="mugCompact" aria-hidden="true"><ascii-coffee-mug mug-tint="#eab779" screen-bg="transparent"></ascii-coffee-mug><span>COFFEE.EXE</span></div>
+  <div class="mugCompact" aria-hidden="true"><ascii-coffee-mug mug-tint="#eab779" screen-bg="transparent"></ascii-coffee-mug></div>
+  <section class="sleepClock" id="sleepClock" aria-label="Sleep and bedtime schedule">
+    <div class="sleepSky" aria-hidden="true"><div class="sleepOrb"></div><div class="sleepHorizon"></div></div>
+    <div class="sleepContent">
+      <div class="sleepCaption">BED IN</div>
+      <div class="sleepCountdown" id="sleepCountdown">--</div>
+      <div class="sleepMini">BED <strong>9:30 PM</strong></div>
+      <div class="sleepMini">UP <strong>5:30 AM</strong></div>
+    </div>
+  </section>
   <div class="hydrationCard" aria-label="Daily water tracker">
     <div class="heroLabel">HYDRATION</div>
     <div class="hydrationMain">
@@ -278,7 +329,7 @@ html[data-era-theme]:not([data-era-theme="classic"]) .physicalIntro{padding:10px
 <section class="panel"><h2>Two meals worth repeating</h2><p><b>Easy protein Alfredo:</b> cook protein pasta; warm an Alfredo sauce with frozen spinach/peas, and stir in pre-cooked chicken or beans. Add pasta water to loosen.</p><p><b>Low-effort burrito bowl:</b> rice, black beans, pre-cooked chicken or tofu, frozen peppers, salsa and a little cheese.</p><p class="fine">No fixed calorie target yet. Start with consistent meals and adjust portions to your hunger and training.</p></section>
 </div>
 <div id="settingsHolder" hidden><section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.7.1';
+const APP_VERSION='1.7.2';
 const PLAN=[
 {d:'Mon',title:'Easy Run + Mobility',type:'CARDIO',duration:'25–40 min',focus:'Build an aerobic base at a conversational pace.',cardio:'20–30 min easy',ex:[['Warm-up walk','5 min','check'],['Easy run / run-walk','20–30 min','check'],['Hip and ankle mobility','5 min','check']]},
 {d:'Tue',title:'Dynos + Bouldering',type:'CLIMBING',duration:'60 min',focus:'Explosiveness, landing control and coordination.',cardio:'10 min easy',ex:[['Bike + easy routes','5 min bike + 10 min easy climbing','check'],['Dyno practice','4–6 quality attempts with full rest','check'],['Coordination climbing','15 min controlled dynamic moves','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check']]},
@@ -404,6 +455,30 @@ function applyEraTheme(theme){
 $('eraThemeSelect').addEventListener('change',e=>applyEraTheme(e.target.value));
 let storedEraTheme='classic';try{storedEraTheme=localStorage.getItem(ERA_THEME_KEY)||'classic'}catch(e){}
 applyEraTheme(storedEraTheme);
+
+
+/* Daily 9:30 PM bedtime / 5:30 AM wake target, based on phone local time. */
+(function(){
+ const card=document.getElementById('sleepClock'),count=document.getElementById('sleepCountdown');
+ if(!card||!count)return;
+ function updateSleepClock(){
+  const now=new Date(),minutes=now.getHours()*60+now.getMinutes();
+  const bedtime=21*60+30,wakeup=5*60+30;
+  const sleeping=minutes>=bedtime||minutes<wakeup;
+  let period=minutes>=5*60&&minutes<10*60?'morning':minutes>=10*60&&minutes<17*60?'day':minutes>=17*60&&minutes<bedtime?'evening':'night';
+  card.dataset.period=period;
+  if(sleeping){count.textContent='Sleep time';card.querySelector('.sleepCaption').textContent='REST WINDOW';}
+  else {
+   const delta=bedtime-minutes,hours=Math.floor(delta/60),mins=delta%60;
+   count.textContent=hours+'h '+String(mins).padStart(2,'0')+'m';
+   card.querySelector('.sleepCaption').textContent='BED IN';
+  }
+ }
+ updateSleepClock();
+ const timer=setInterval(()=>{if(!document.hidden)updateSleepClock()},30000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateSleepClock()});
+ window.addEventListener('pageshow',updateSleepClock);
+})();
 
 renderNutrition();
 render();
