@@ -757,6 +757,124 @@ function renderWeeklyReview(){
 
 function toggleDrawer(on){document.body.classList.toggle('drawer-open',on);drawerEl.setAttribute('aria-hidden',String(!on));if(on)switchDrawerPage('review')}
 $('openDrawer').onclick=()=>toggleDrawer(true);$('closeDrawer').onclick=()=>toggleDrawer(false);$('shade').onclick=()=>toggleDrawer(false);document.addEventListener('keydown',e=>{if(e.key==='Escape')toggleDrawer(false)});
+
+/* Body RPG progression: derived from locally saved exercise logs, never invented.
+   Percentages are progress through each XP tier, not measured muscle development. */
+const BODY_GROUPS=[
+ {key:'biceps',name:'Biceps'},
+ {key:'shoulders',name:'Shoulders'},
+ {key:'core',name:'Core'},
+ {key:'triceps',name:'Triceps'},
+ {key:'quads',name:'Quads'},
+ {key:'hamstrings',name:'Hamstrings'},
+ {key:'calves',name:'Calves'},
+ {key:'back',name:'Back'},
+ {key:'chest',name:'Chest'},
+ {key:'grip',name:'Grip'}
+];
+let selectedBodyMuscle=null;
+function bodyMusclesForExercise(ex,day){
+ const n=String(ex?.[0]||'').toLowerCase(),hits=[];
+ const add=(...groups)=>groups.forEach(key=>{if(!hits.includes(key))hits.push(key)});
+ if(/warm.up|wrist circles|tendon glides|easy bike|treadmill|cool.down|mobility|rest and recover/.test(n))return hits;
+ if(/arnold press|lateral raise|shoulder press/.test(n))add('shoulders','triceps');
+ if(/bench|hex press|chest fly|incline push/.test(n))add('chest','triceps','shoulders');
+ if(/hammer curl|concentration curl|rope curl|reverse curl|ez bar curl/.test(n))add('biceps');
+ if(/skull crusher|tricep|overhead rope extension/.test(n))add('triceps');
+ if(/chest.supported row|pendlay row|kneeling cable row|pulldown|pull.over|pull.up|scapular pull|offset pull|lat pump/.test(n))add('back','biceps');
+ if(/glute bridge|romanian deadlift/.test(n))add('hamstrings','quads');
+ if(/leg curl/.test(n))add('hamstrings');
+ if(/leg press|bulgarian|split squat|squat|lunge/.test(n))add('quads');
+ if(/calf raise/.test(n))add('calves');
+ if(/cable crunch|reverse crunch|hollow|plank|v.up|sit.up/.test(n))add('core');
+ if(/fingerboard|large.edge|feet.on edge|finger primer|finger strength|grip/.test(n))add('grip');
+ if(/boulder|climb|overhang|dyno|deadpoint|silent.feet|hip.turn|flagging|footwork/.test(n))add('grip','back','core');
+ if(/single.arm scapular/.test(n))add('back','grip');
+ return hits;
+}
+function bodyXPData(){
+ const xp=Object.fromEntries(BODY_GROUPS.map(g=>[g.key,0]));
+ const weekXP=Object.fromEntries(BODY_GROUPS.map(g=>[g.key,0]));
+ const cutoff=new Date();cutoff.setHours(0,0,0,0);cutoff.setDate(cutoff.getDate()-27);
+ for(const [date,s] of Object.entries(storage.sessions||{})){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!s||typeof s!=='object')continue;
+  const dayDate=new Date(date+'T12:00:00');if(!Number.isFinite(dayDate.getTime()))continue;
+  const plan=PLAN[(dayDate.getDay()+6)%7];if(!plan)continue;
+  // Do not translate old exercise-index layouts into new muscle categories.
+  if(['Mon','Wed','Fri'].includes(plan.d)&&s.planRevision!==3)continue;
+  for(let i=0;i<plan.ex.length;i++){
+   const ex=plan.ex[i],groups=bodyMusclesForExercise(ex,plan.d);
+   if(groups.length===0)continue;
+   const sets=Array.isArray(s.sets?.[i])?s.sets[i]:[];
+   const loggedSets=ex[2]==='lift'?Math.min(6,sets.filter(x=>x&&Number(x.reps)>0&&x.weight!==''&&x.weight!=null).length):0;
+   const checked=s.done?.[i]===true;
+   if(!checked&&!loggedSets)continue;
+   // Logging working sets earns more XP than checking a single exercise.
+   const exerciseXP=Math.min(32,loggedSets*9+(checked?6:0));
+   for(const group of groups){
+    xp[group]+=exerciseXP;
+    if(dayDate>=cutoff)weekXP[group]+=exerciseXP;
+   }
+  }
+ }
+ // Explicit running entries add lower-body XP. Other cardio isn't assumed to be running.
+ const runLogs=typeof reminderPrefs!=='undefined'?reminderPrefs.runLogs||{}:{};
+ for(const [date,minutesRaw] of Object.entries(runLogs)){
+  const mins=Number(minutesRaw);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(mins)||mins<=0)continue;
+  const earned=Math.min(35,Math.round(mins*.8));
+  xp.quads+=earned;xp.calves+=earned;
+  if(new Date(date+'T12:00:00')>=cutoff){weekXP.quads+=earned;weekXP.calves+=earned}
+ }
+ const total=Object.values(xp).reduce((a,b)=>a+b,0);
+ return {xp,weekXP,total};
+}
+function bodyTier(points){
+ const perLevel=200;
+ return {level:1+Math.floor(points/perLevel),percent:Math.floor((points%perLevel)/perLevel*100),current:points%perLevel,needed:perLevel};
+}
+function renderBodyProgress(){
+ const root=$('bodyView');if(!root)return;
+ const {xp,weekXP,total}=bodyXPData();
+ const overall=bodyTier(total);
+ $('bodyLevel').textContent=overall.level;
+ $('bodyTotalXp').textContent=total.toLocaleString()+' XP';
+ $('bodyNextLevel').textContent=overall.current+' / '+overall.needed+' XP';
+ $('bodyLevelFill').style.width=overall.percent+'%';
+ const map=$('bodyMapStats');map.replaceChildren();
+ const layout=['biceps','shoulders','core','triceps','quads','hamstrings','calves','back','chest','grip'];
+ for(const key of layout){
+  const meta=BODY_GROUPS.find(g=>g.key===key),tier=bodyTier(xp[key]);
+  const card=make('button',{class:'muscleCallout'+(selectedBodyMuscle===key?' isSelected':''),type:'button','aria-label':meta.name+' level '+tier.level+' '+tier.percent+' percent to next level'},map);
+  make('span',{class:'muscleCalloutLabel',text:meta.name},card);
+  make('span',{class:'muscleCalloutValue',text:tier.percent+'%'},card);
+  make('span',{class:'muscleCalloutTrend',text:'Lv '+tier.level+' · '+xp[key]+' XP'},card);
+  const bar=make('span',{class:'bodyXpTrack'},card);
+  const fill=make('span',{},bar);fill.style.width=tier.percent+'%';
+  card.onclick=()=>{
+   selectedBodyMuscle=selectedBodyMuscle===key?null:key;
+   renderBodyProgress();
+  };
+ }
+ const all=BODY_GROUPS.filter(g=>weekXP[g.key]>0).sort((a,b)=>weekXP[b.key]-weekXP[a.key]);
+ const most=all[0],least=BODY_GROUPS.filter(g=>weekXP[g.key]>0).sort((a,b)=>weekXP[a.key]-weekXP[b.key])[0];
+ let insight='Log your first workout to start earning muscle XP.';
+ if(most){insight=most.name+' has the most logged training XP this month.';}
+ if(all.length>2&&least&&weekXP[most.key]>weekXP[least.key]*1.8){insight='You’ve trained '+most.name.toLowerCase()+' more than '+least.name.toLowerCase()+' recently.'}
+ $('bodyInsightText').textContent=insight;
+ const detail=$('bodyDetail');
+ if(selectedBodyMuscle){
+  const meta=BODY_GROUPS.find(g=>g.key===selectedBodyMuscle);
+  detail.hidden=false;
+  $('bodyDetailTitle').textContent=meta.name+' · Level '+bodyTier(xp[meta.key]).level;
+  $('bodyDetailCopy').textContent=xp[meta.key]+' total XP · '+weekXP[meta.key]+' XP earned in the past 28 days. Earn more by logging exercises that train this muscle group.';
+ }else detail.hidden=true;
+}
+$('bodyInfo').onclick=()=>alert('Body XP comes from the exercises and sets you log. Each 200 XP advances a muscle level. Percentages track progress to the next level, not actual muscle growth or body fat. Training balance uses the past 28 days.');
+$('bodyInsight').onclick=()=>{const stats=bodyXPData().weekXP;const sorted=BODY_GROUPS.slice().sort((a,b)=>stats[a.key]-stats[b.key]);selectedBodyMuscle=sorted[0].key;renderBodyProgress();$('bodyDetail').scrollIntoView({behavior:'smooth',block:'nearest'})};
+$('bodyFront').onclick=()=>{$('bodyFigure').src='./body-figure.svg';$('bodyFront').setAttribute('aria-pressed','true');$('bodyBack').setAttribute('aria-pressed','false')};
+$('bodyBack').onclick=()=>{$('bodyFigure').src='./body-figure-back.svg';$('bodyFront').setAttribute('aria-pressed','false');$('bodyBack').setAttribute('aria-pressed','true')};
+
 function switchTab(n){
  const mode=['physical','nutrition','body'].includes(n)?n:'physical';
  for(const item of ['physical','nutrition','body']){
@@ -951,7 +1069,7 @@ async function maybeNotifyOnOpen(){
 }
 const oldRender=render;
 // Render nudges whenever logged workouts change without modifying core workout logic.
-render=function(){oldRender();renderNudges()};
+render=function(){oldRender();renderNudges();if(!$('bodyView').hidden)renderBodyProgress()};
 renderNudges();updateOpenAlertsUI();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderNudges();maybeNotifyOnOpen()}});
 window.addEventListener('pageshow',()=>{renderNudges();maybeNotifyOnOpen()});
