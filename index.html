@@ -171,7 +171,77 @@ main{max-width:620px;padding:18px 16px 70px}
 #physicalView>.panel:first-of-type{margin-top:13px}
 @media(max-width:390px){main{padding-left:12px;padding-right:12px}.dashboardHero{grid-template-columns:minmax(0,.82fr) minmax(0,1.5fr);gap:7px}.dashboardHero .hydrationCard{padding:8px}.dashboardHero .hydrationMain{grid-template-columns:21px minmax(0,1fr) 52px;gap:5px}.dashboardHero .waterTank{width:21px}.dashboardHero .waterActions button{font-size:10px}.mugCompact span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.mugCompact ascii-coffee-mug{transform:scale(1.23)}}
-</style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody"></div></aside><main>
+
+/* Era theme engine v1.7 - visual themes share the same components and local data. */
+.themeSettings{background:var(--panel);border:1px solid var(--stroke);border-radius:15px;padding:16px;margin:12px 0 18px}
+.themeSettings label{display:flex;align-items:center;justify-content:space-between;font-weight:750;font-size:16px;margin-bottom:9px;color:var(--text)}
+.themeChevron{font-size:15px;color:var(--orange)}
+.themeSettings select{appearance:none;-webkit-appearance:none;display:block;width:100%;min-height:46px;border:1px solid var(--stroke);border-radius:10px;background:var(--panel2);color:var(--text);padding:11px 32px 11px 12px;font-size:15px;outline-offset:3px}
+.themeSettings select:focus-visible{outline:2px solid var(--orange)}
+.themeDescription{font-size:12px;min-height:32px;margin:10px 0 8px;color:var(--muted)}
+.themeSwatches{display:flex;gap:7px;margin-top:5px}.themeSwatches span{width:23px;height:23px;border:1px solid #ffffff30;border-radius:50%;background:var(--swatch-one)}
+.themeSwatches span:nth-child(2){background:var(--swatch-two)}.themeSwatches span:nth-child(3){background:var(--swatch-three)}.themeSwatches span:nth-child(4){background:var(--swatch-four)}
+:root{--swatch-one:#0d0f13;--swatch-two:#171a21;--swatch-three:#ff8538;--swatch-four:#5fdfaa;--theme-glow:none}
+html[data-era-theme] body{background:var(--bg);color:var(--text)}
+html[data-era-theme] .panel,html[data-era-theme] .stat,html[data-era-theme] .mugCompact,html[data-era-theme] .dashboardHero .hydrationCard,html[data-era-theme] .nutritionhero,html[data-era-theme] .drawer,html[data-era-theme] .cardio{background:var(--panel);border-color:var(--stroke);box-shadow:var(--theme-glow)}
+html[data-era-theme] .day:not(.active),html[data-era-theme] .btn:not(.main),html[data-era-theme] .gear,html[data-era-theme] .waterUndo{background:var(--panel2);border-color:var(--stroke);color:var(--text)}
+html[data-era-theme] .btn.main,html[data-era-theme] .waterAdd{background:var(--orange);border-color:var(--orange);color:var(--accentText,#16100b)}
+html[data-era-theme] .day.active,html[data-era-theme] .folderSlider,html[data-era-theme] .pill{background:var(--selected,#39281e);border-color:var(--orange);color:var(--text)}
+html[data-era-theme] .folderTabs button[aria-selected=true]{color:var(--selectionText,#ffc391)}
+html[data-era-theme] .folderTabs:before{background:var(--panel);border-color:var(--stroke)}
+html[data-era-theme] .folderTabs{border-bottom-color:var(--stroke)}
+html[data-era-theme] .folderSlider{box-shadow:var(--theme-glow)}
+html[data-era-theme] .hydrationStats strong{color:var(--text)}
+html[data-era-theme] .waterTank{border-color:var(--water,#6392af);background:var(--panel2)}
+html[data-era-theme] .waterLiquid{background:linear-gradient(0deg,var(--water-deep,#247bb1),var(--water,#63c9e3))}
+html[data-era-theme] .bar{background:var(--panel2)}html[data-era-theme] .bar>div{background:var(--green)}
+html[data-era-theme] .compare{border-left-color:var(--orange);background:var(--panel2);color:var(--text)}
+html[data-era-theme] .sets input,html[data-era-theme] .cardio input,html[data-era-theme] .nutri-input input{background:var(--bg);border-color:var(--stroke);color:var(--text)}
+html[data-era-theme] .mugCompact{background:var(--panel)}
+html[data-era-theme] .mugCompact span{color:var(--orange)}
+html[data-era-theme] .nutritionhero{background:linear-gradient(125deg,var(--selected,#39281e),var(--panel) 80%)}
+html[data-era-theme] .fine,html[data-era-theme] .sub,html[data-era-theme] .hint,html[data-era-theme] .stat small{color:var(--muted)}
+html[data-era-theme] .eraSubtitle{color:var(--muted)}
+html[data-era-theme] .waterGoalEdit{color:var(--water,#8aaabf)}
+html[data-era-theme] .done{color:var(--green);border-color:var(--stroke);background:var(--panel2)}
+/* SOLARPUNK: evergreen and pale gold, faint botanical aura. */
+html[data-era-theme="solarpunk"]{--bg:#071d16;--panel:#102c21;--panel2:#193b2c;--stroke:#426750;--text:#f6ead0;--muted:#bacfbd;--orange:#dfb766;--green:#8fd8a4;--water:#74d4ba;--water-deep:#247c6b;--selected:#3b3820;--selectionText:#ffe5a6;--accentText:#15271b;--swatch-one:#071d16;--swatch-two:#214b35;--swatch-three:#dfb766;--swatch-four:#8fd8a4;--theme-glow:0 0 18px #dabb6710}
+html[data-era-theme="solarpunk"] body{background:radial-gradient(ellipse at 100% 0%,#245638 0%,transparent 42%),radial-gradient(ellipse at 0% 100%,#123a2b 0%,transparent 48%),var(--bg);background-attachment:fixed}
+/* CRT: very dim scanlines, retro terminal palette, crisp mono type. */
+html[data-era-theme="crt"]{--bg:#070d0a;--panel:#0b1811;--panel2:#10251a;--stroke:#315740;--text:#d7f0cc;--muted:#9dc5a4;--orange:#ffb451;--green:#72e89c;--water:#82e7b1;--water-deep:#236f55;--selected:#30291b;--selectionText:#ffd48a;--accentText:#102218;--swatch-one:#070d0a;--swatch-two:#10251a;--swatch-three:#ffb451;--swatch-four:#72e89c;--theme-glow:0 0 9px #59b77a14}
+html[data-era-theme="crt"] body{font-family:ui-monospace,Consolas,monospace}
+html[data-era-theme="crt"] body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1000;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,#00000012 4px);opacity:.38}
+html[data-era-theme="crt"] .stat,html[data-era-theme="crt"] .panel,html[data-era-theme="crt"] .dashboardHero .hydrationCard{border-radius:7px}
+/* BRUTALIST: uncluttered matte graphite and warm amber. */
+html[data-era-theme="brutalist"]{--bg:#0a0a0b;--panel:#171717;--panel2:#222222;--stroke:#49433c;--text:#f6f0e6;--muted:#b9b5b0;--orange:#ff9c2b;--green:#e0b477;--water:#daa868;--water-deep:#79502a;--selected:#403020;--selectionText:#ffbb6d;--accentText:#17120d;--swatch-one:#0a0a0b;--swatch-two:#303030;--swatch-three:#ff9c2b;--swatch-four:#f6f0e6;--theme-glow:none}
+html[data-era-theme="brutalist"] body{background:var(--bg)}
+html[data-era-theme="brutalist"] .stat,html[data-era-theme="brutalist"] .panel,html[data-era-theme="brutalist"] .dashboardHero .hydrationCard{border-radius:9px}
+html[data-era-theme="brutalist"] h1,html[data-era-theme="brutalist"] h2{letter-spacing:-.7px}
+/* MEDIEVAL PSX: low-res charcoal stone, copper glyphs, subtle dither. */
+html[data-era-theme="medieval"]{--bg:#120e11;--panel:#211a1d;--panel2:#302528;--stroke:#665148;--text:#f2dcc1;--muted:#c4aa99;--orange:#d88a47;--green:#c8b07e;--water:#b5a5a4;--water-deep:#615965;--selected:#583720;--selectionText:#ffd2a1;--accentText:#23120c;--swatch-one:#120e11;--swatch-two:#302528;--swatch-three:#d88a47;--swatch-four:#f2dcc1;--theme-glow:inset 0 0 11px #0004}
+html[data-era-theme="medieval"] body{background:radial-gradient(ellipse at 50% -10%,#482a35 0%,transparent 56%),var(--bg);font-family:Georgia,Palatino,serif}
+html[data-era-theme="medieval"] .stat,html[data-era-theme="medieval"] .panel,html[data-era-theme="medieval"] .dashboardHero .hydrationCard{border-radius:4px}
+html[data-era-theme="medieval"] .mugCompact,html[data-era-theme="medieval"] .nutritionhero{background-image:radial-gradient(#e9b17d15 .8px,transparent .8px);background-size:4px 4px}
+html[data-era-theme="medieval"] .eyebrow{font-family:Georgia,serif}
+/* CYBERPUNK: midnight glass with restrained magenta/cyan gradients and hue accents. */
+html[data-era-theme="cyberpunk"]{--bg:#090d1b;--panel:#111a2b;--panel2:#1b2541;--stroke:#36516b;--text:#edf5ff;--muted:#b3c4d8;--orange:#ed67be;--green:#54dccf;--water:#50d4e7;--water-deep:#176e9d;--selected:#392141;--selectionText:#ffb5df;--accentText:#130e22;--swatch-one:#090d1b;--swatch-two:#1b2541;--swatch-three:#ed67be;--swatch-four:#50d4e7;--theme-glow:0 0 15px #a94ad41c}
+html[data-era-theme="cyberpunk"] body{background:radial-gradient(ellipse at 100% 0%,#27154b 0%,transparent 46%),radial-gradient(ellipse at 0% 100%,#06323d 0%,transparent 47%),var(--bg);background-attachment:fixed}
+html[data-era-theme="cyberpunk"] .folderSlider{box-shadow:0 0 15px #ed67be35}
+</style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody">
+<section class="themeSettings" aria-label="Appearance settings">
+<label for="eraThemeSelect">Themes <span class="themeChevron" aria-hidden="true">▾</span></label>
+<select id="eraThemeSelect" aria-label="Choose your app theme">
+<option value="classic">Classic (current)</option>
+<option value="solarpunk">Solarpunk</option>
+<option value="crt">Retro CRT</option>
+<option value="brutalist">Brutalist Amber</option>
+<option value="medieval">Medieval PSX</option>
+<option value="cyberpunk">Cyberpunk</option>
+</select>
+<p class="themeDescription" id="themeDescription">Original dark and orange Athletic Era style.</p>
+<div class="themeSwatches" id="themeSwatches" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+</section>
+</div></aside><main>
 <header class="eraHeader">
   <div class="eraIdentity"><div class="eyebrow">ATHLETIC ERA</div><div class="eraSubtitle">YOUR DAILY TRAINING</div></div>
   <button id="openDrawer" class="gear" aria-label="Open settings">☰</button>
@@ -200,7 +270,7 @@ main{max-width:620px;padding:18px 16px 70px}
 <section class="panel"><h2>Two meals worth repeating</h2><p><b>Easy protein Alfredo:</b> cook protein pasta; warm an Alfredo sauce with frozen spinach/peas, and stir in pre-cooked chicken or beans. Add pasta water to loosen.</p><p><b>Low-effort burrito bowl:</b> rice, black beans, pre-cooked chicken or tofu, frozen peppers, salsa and a little cheese.</p><p class="fine">No fixed calorie target yet. Start with consistent meals and adjust portions to your hunger and training.</p></section>
 </div>
 <div id="settingsHolder" hidden><section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.6.0';
+const APP_VERSION='1.7.0';
 const PLAN=[
 {d:'Mon',title:'Easy Run + Mobility',type:'CARDIO',duration:'25–40 min',focus:'Build an aerobic base at a conversational pace.',cardio:'20–30 min easy',ex:[['Warm-up walk','5 min','check'],['Easy run / run-walk','20–30 min','check'],['Hip and ankle mobility','5 min','check']]},
 {d:'Tue',title:'Dynos + Bouldering',type:'CLIMBING',duration:'60 min',focus:'Explosiveness, landing control and coordination.',cardio:'10 min easy',ex:[['Bike + easy routes','5 min bike + 10 min easy climbing','check'],['Dyno practice','4–6 quality attempts with full rest','check'],['Coordination climbing','15 min controlled dynamic moves','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check']]},
@@ -302,6 +372,30 @@ $('undoNutrition').onclick=()=>{const e=nutritionToday().entries;if(e.length){e.
   reduced.addEventListener?.('change',request);
   request();
 })();
+
+
+/* Theme preferences are independent of workout and nutrition history. */
+const ERA_THEME_KEY='athletic-era-theme-v1';
+const ERA_THEMES={
+ classic:{description:'Original Athletic Era charcoal and orange.',tint:'#eab779',bg:'transparent'},
+ solarpunk:{description:'Forest green, soft gold and subtle botanical light.',tint:'#f4c772',bg:'transparent'},
+ crt:{description:'Retro terminal with faint scanlines and warm amber.',tint:'#f8b75a',bg:'transparent'},
+ brutalist:{description:'High-contrast graphite and clean orange accents.',tint:'#ffa33d',bg:'transparent'},
+ medieval:{description:'Dark stone, copper, parchment and restrained PSX dithering.',tint:'#d7a274',bg:'transparent'},
+ cyberpunk:{description:'Midnight blue with controlled cyan and magenta glow.',tint:'#d785e8',bg:'transparent'}
+};
+function applyEraTheme(theme){
+ const key=Object.hasOwn(ERA_THEMES,theme)?theme:'classic';
+ document.documentElement.dataset.eraTheme=key;
+ $('eraThemeSelect').value=key;
+ $('themeDescription').textContent=ERA_THEMES[key].description;
+ const mug=document.querySelector('.mugCompact ascii-coffee-mug');
+ if(mug){mug.setAttribute('mug-tint',ERA_THEMES[key].tint);mug.setAttribute('screen-bg',ERA_THEMES[key].bg);}
+ try{localStorage.setItem(ERA_THEME_KEY,key)}catch(e){}
+}
+$('eraThemeSelect').addEventListener('change',e=>applyEraTheme(e.target.value));
+let storedEraTheme='classic';try{storedEraTheme=localStorage.getItem(ERA_THEME_KEY)||'classic'}catch(e){}
+applyEraTheme(storedEraTheme);
 
 renderNutrition();
 render();
