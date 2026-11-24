@@ -130,19 +130,65 @@ button:focus:not(:focus-visible),a:focus:not(:focus-visible),[role="tab"]:focus:
 @media(prefers-reduced-motion:reduce){
   .topDashboard .ambientCoffee ascii-coffee-mug{transform:scale(1);will-change:auto}
 }
-</style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody"></div></aside><main><section class="topDashboard" aria-label="Athletic Era dashboard header">
-<div class="ambientCoffee" aria-hidden="true"><ascii-coffee-mug mug-tint="#eab779" screen-bg="transparent"></ascii-coffee-mug></div>
-<div class="topLeft"><b class="eyebrow">ATHLETIC ERA</b><span class="lcdLabel">COFFEE.EXE</span></div>
-<div class="topRight"><button id="openDrawer" class="gear" aria-label="Settings">☰</button></div>
-<section class="hydrationCard" aria-label="Daily water tracker">
-<div class="heroLabel">HYDRATION</div>
-<div class="hydrationMain">
-<div class="waterTank" aria-hidden="true"><div class="waterLiquid" id="waterLiquid"></div><div class="waterTicks"></div></div>
-<div class="hydrationStats"><strong id="waterOzDisplay">0</strong><span>oz today</span><span id="waterGoalDisplay">of 80 oz</span></div>
-<div class="waterActions"><button type="button" id="addWater8" class="waterAdd" aria-label="Add eight ounces of water">+ 8 oz</button><button type="button" id="undoWater8" class="waterUndo" aria-label="Subtract up to eight ounces of water">− 8 oz</button></div>
-</div>
-<button type="button" id="editWaterGoal" class="waterGoalEdit">Adjust daily goal</button>
-</section></section><nav class="tabs folderTabs" role="tablist" aria-label="Training sections"><span class="folderSlider" aria-hidden="true"></span><button id="physicalTab" role="tab" aria-selected="true" aria-controls="physicalView">Physical</button><button id="nutritionTab" role="tab" aria-selected="false" aria-controls="nutritionView">Nutrition</button></nav><div id="physicalView" role="tabpanel"><div class="top"><div><div class="eyebrow">ARETE / ATHLETIC ERA</div><h1>Build your athleticism.</h1><p class="sub">Climb · Lift · Run · Recover</p></div><span class="pill">16-week phase</span></div><div class="stats"><div class="stat"><small>WORKOUTS</small><b id="completed">0</b><small>this week</small></div><div class="stat"><small>CARDIO</small><b id="cardioSum">0</b><small>minutes this week</small></div><div class="stat"><small>PHASE</small><b id="phase">1</b><small>of 16 weeks</small></div></div><div class="week"><button class="btn small" id="prev">‹ Earlier</button><span id="weekLabel"></span><button class="btn small" id="next">Later ›</button></div><div class="days" id="days"></div><section class="panel"><div class="heading"><div><div class="eyebrow" id="type"></div><h2 id="dayTitle"></h2></div><span class="pill" id="duration"></span></div><p class="focus" id="focus"></p><div class="heading"><small class="muted">SESSION COMPLETION</small><small id="progressLabel"></small></div><div class="bar"><div id="progressBar"></div></div><div id="exerciseList"></div><div class="cardio"><label><span>♥ Cardio minutes today <small class="muted" id="cardioGoal"></small></span><input type="number" min="0" max="240" step="1" inputmode="numeric" id="cardioInput" aria-label="Cardio minutes" /></label></div><div class="actions"><button class="btn main" id="finish">Mark session complete</button><button class="btn" id="clear">Reset today's checks</button></div></section><section class="panel"><h2 style="margin:0 0 8px">Progressive overload</h2><p class="sub">Each strength exercise shows your previous week's sets and recommends what to try next. Reach the top of the rep range with good form before increasing weight. These are suggestions, not requirements.</p><p class="fine">Log each set as you train. Empty fields mean unrecorded. For dumbbells, enter the weight of one dumbbell consistently. Never force a heavier lift on a fatigued day.</p></section></div><div id="nutritionView" role="tabpanel" hidden>
+
+/* v1.6.0: simplified mobile-first dashboard */
+main{max-width:620px;padding:18px 16px 70px}
+.eraHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.eraIdentity .eyebrow{font-size:14px;letter-spacing:2.6px}
+.eraSubtitle{font-size:10px;color:#8d929f;letter-spacing:1.6px;margin-top:4px}
+.eraHeader .gear{min-height:42px;min-width:44px;font-size:22px}
+.dashboardHero{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.45fr);gap:9px;align-items:stretch;margin:0 0 17px;min-height:150px}
+.mugCompact{min-width:0;border:1px solid #30333c;background:linear-gradient(155deg,#191c24,#0e1118);border-radius:14px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;gap:3px}
+.mugCompact ascii-coffee-mug{display:block;width:100%;max-width:176px;aspect-ratio:232/124;transform:scale(1.23);transform-origin:center}
+.mugCompact span{font-size:9px;letter-spacing:1.15px;color:#b38d6b}
+.dashboardHero .hydrationCard{margin:0;padding:11px;background:#171c25;border:1px solid #344253;box-shadow:none;border-radius:14px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;gap:4px}
+.dashboardHero .heroLabel{font-size:10px;letter-spacing:1.4px}
+.dashboardHero .hydrationMain{display:grid;grid-template-columns:24px minmax(0,1fr) 60px;gap:8px;align-items:center;min-height:82px}
+.dashboardHero .waterTank{height:77px;width:24px;border-radius:7px}
+.dashboardHero .hydrationStats strong{font-size:25px}
+.dashboardHero .hydrationStats span{font-size:10px;line-height:1.35;white-space:normal}
+.dashboardHero .waterActions{display:flex;flex-direction:column;gap:6px;align-self:center;width:100%}
+.dashboardHero .waterActions button{font-size:11px;font-weight:750;width:100%;min-height:36px;padding:6px 1px;white-space:nowrap}
+.dashboardHero .waterGoalEdit{font-size:10px;align-self:flex-start;padding-top:3px}
+.folderTabs{position:relative;top:auto;display:grid;grid-template-columns:repeat(2,1fr);margin:0 0 21px!important;padding:0;border:0;border-bottom:2px solid #4d423b;background:transparent;border-radius:0;overflow:visible}
+.folderTabs:before{inset:0 0 2px;border-radius:12px 12px 0 0}
+.folderTabs .folderSlider{border-radius:12px 12px 0 0}
+.folderTabs button,.folderTabs button[aria-selected=true]{min-height:47px;padding:12px 8px;font-size:14px}
+.physicalIntro{align-items:center;margin:0 0 13px}
+.physicalIntro h1{font-size:24px;line-height:1.13;margin:4px 0 2px;max-width:240px}
+.physicalIntro .eyebrow{font-size:10px;letter-spacing:1.5px}
+.physicalIntro .sub{font-size:11px;margin:5px 0}
+.physicalIntro .pill{flex:0 0 auto;font-size:10px;padding:6px 8px;white-space:nowrap}
+#physicalView>.stats{margin-top:11px;gap:7px}
+#physicalView>.stats .stat{padding:10px 9px;border-radius:12px}
+#physicalView>.stats .stat b{font-size:22px}
+#physicalView>.stats .stat small{font-size:10px}
+#physicalView>.week{margin:14px 0 8px;gap:7px}
+#physicalView>.week button{width:40px;height:36px;padding:5px;font-size:19px}
+#physicalView>.week span{font-size:12px}
+.days{margin-top:10px}
+.day{padding:9px 0}
+#physicalView>.panel:first-of-type{margin-top:13px}
+@media(max-width:390px){main{padding-left:12px;padding-right:12px}.dashboardHero{grid-template-columns:minmax(0,.82fr) minmax(0,1.5fr);gap:7px}.dashboardHero .hydrationCard{padding:8px}.dashboardHero .hydrationMain{grid-template-columns:21px minmax(0,1fr) 52px;gap:5px}.dashboardHero .waterTank{width:21px}.dashboardHero .waterActions button{font-size:10px}.mugCompact span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.mugCompact ascii-coffee-mug{transform:scale(1.23)}}
+</style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody"></div></aside><main>
+<header class="eraHeader">
+  <div class="eraIdentity"><div class="eyebrow">ATHLETIC ERA</div><div class="eraSubtitle">YOUR DAILY TRAINING</div></div>
+  <button id="openDrawer" class="gear" aria-label="Open settings">☰</button>
+</header>
+<section class="dashboardHero" aria-label="Today's dashboard">
+  <div class="mugCompact" aria-hidden="true"><ascii-coffee-mug mug-tint="#eab779" screen-bg="transparent"></ascii-coffee-mug><span>COFFEE.EXE</span></div>
+  <div class="hydrationCard" aria-label="Daily water tracker">
+    <div class="heroLabel">HYDRATION</div>
+    <div class="hydrationMain">
+      <div class="waterTank" aria-hidden="true"><div class="waterLiquid" id="waterLiquid"></div><div class="waterTicks"></div></div>
+      <div class="hydrationStats"><strong id="waterOzDisplay">0</strong><span>oz today</span><span id="waterGoalDisplay">of 80 oz</span></div>
+      <div class="waterActions"><button type="button" id="addWater8" class="waterAdd" aria-label="Add eight ounces of water">+ 8 oz</button><button type="button" id="undoWater8" class="waterUndo" aria-label="Subtract up to eight ounces of water">− 8 oz</button></div>
+    </div>
+    <button type="button" id="editWaterGoal" class="waterGoalEdit">Adjust goal</button>
+  </div>
+</section>
+<nav class="tabs folderTabs" role="tablist" aria-label="Training sections"><span class="folderSlider" aria-hidden="true"></span><button id="physicalTab" role="tab" aria-selected="true" aria-controls="physicalView">Physical</button><button id="nutritionTab" role="tab" aria-selected="false" aria-controls="nutritionView">Nutrition</button></nav><div id="physicalView" role="tabpanel"><div class="top physicalIntro"><div><div class="eyebrow">YOUR 16-WEEK PROGRAM</div><h1>Move with purpose.</h1><p class="sub">Climb · Strength · Cardio · Recovery</p></div><span class="pill">PHASE 01</span></div><div class="stats"><div class="stat"><small>WORKOUTS</small><b id="completed">0</b><small>this week</small></div><div class="stat"><small>CARDIO</small><b id="cardioSum">0</b><small>minutes this week</small></div><div class="stat"><small>PHASE</small><b id="phase">1</b><small>of 16 weeks</small></div></div><div class="week"><button class="btn small" id="prev" aria-label="Previous training week">‹</button><span id="weekLabel"></span><button class="btn small" id="next" aria-label="Next training week">›</button></div><div class="days" id="days"></div><section class="panel"><div class="heading"><div><div class="eyebrow" id="type"></div><h2 id="dayTitle"></h2></div><span class="pill" id="duration"></span></div><p class="focus" id="focus"></p><div class="heading"><small class="muted">SESSION COMPLETION</small><small id="progressLabel"></small></div><div class="bar"><div id="progressBar"></div></div><div id="exerciseList"></div><div class="cardio"><label><span>♥ Cardio minutes today <small class="muted" id="cardioGoal"></small></span><input type="number" min="0" max="240" step="1" inputmode="numeric" id="cardioInput" aria-label="Cardio minutes" /></label></div><div class="actions"><button class="btn main" id="finish">Mark session complete</button><button class="btn" id="clear">Reset today's checks</button></div></section><section class="panel"><h2 style="margin:0 0 8px">Progressive overload</h2><p class="sub">Each strength exercise shows your previous week's sets and recommends what to try next. Reach the top of the rep range with good form before increasing weight. These are suggestions, not requirements.</p><p class="fine">Log each set as you train. Empty fields mean unrecorded. For dumbbells, enter the weight of one dumbbell consistently. Never force a heavier lift on a fatigued day.</p></section></div><div id="nutritionView" role="tabpanel" hidden>
 <div class="nutritionhero"><div class="eyebrow">FUEL YOUR ATHLETIC ERA</div><h2>Nutrition</h2><p>Realistic food for climbing, cardio, muscle and recovery. Start with consistency, not perfection.</p><span class="pill">Personal starter plan</span></div>
 <section class="panel"><div class="heading"><h2>Today's nutrition</h2><span class="pill" id="nutritionDate"></span></div><p class="sub">Record your daily protein and water. Estimates are fine. Your entries save automatically on this phone.</p>
 <div class="stats" style="grid-template-columns:repeat(2,1fr)"><div class="stat"><small>PROTEIN</small><b id="proteinSum">0 g</b><small>of 100 g starting goal</small></div><div class="stat"><small>WATER</small><b id="waterSum">0 mL</b><small>log fluids through the day</small></div></div>
@@ -154,7 +200,7 @@ button:focus:not(:focus-visible),a:focus:not(:focus-visible),[role="tab"]:focus:
 <section class="panel"><h2>Two meals worth repeating</h2><p><b>Easy protein Alfredo:</b> cook protein pasta; warm an Alfredo sauce with frozen spinach/peas, and stir in pre-cooked chicken or beans. Add pasta water to loosen.</p><p><b>Low-effort burrito bowl:</b> rice, black beans, pre-cooked chicken or tofu, frozen peppers, salsa and a little cheese.</p><p class="fine">No fixed calorie target yet. Start with consistent meals and adjust portions to your hunger and training.</p></section>
 </div>
 <div id="settingsHolder" hidden><section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.5.9';
+const APP_VERSION='1.6.0';
 const PLAN=[
 {d:'Mon',title:'Easy Run + Mobility',type:'CARDIO',duration:'25–40 min',focus:'Build an aerobic base at a conversational pace.',cardio:'20–30 min easy',ex:[['Warm-up walk','5 min','check'],['Easy run / run-walk','20–30 min','check'],['Hip and ankle mobility','5 min','check']]},
 {d:'Tue',title:'Dynos + Bouldering',type:'CLIMBING',duration:'60 min',focus:'Explosiveness, landing control and coordination.',cardio:'10 min easy',ex:[['Bike + easy routes','5 min bike + 10 min easy climbing','check'],['Dyno practice','4–6 quality attempts with full rest','check'],['Coordination climbing','15 min controlled dynamic moves','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check']]},
