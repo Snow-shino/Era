@@ -314,7 +314,30 @@ html[data-era-theme="brutalist"] .circuitGroup{--circuit-accent:#d68da1;--circui
 html[data-era-theme="cyberpunk"] .movementGroup{--circuit-accent:#76d8e9;--circuit-bg:rgba(80,188,220,.075);--circuit-line:rgba(110,202,232,.26)}
 html[data-era-theme="medieval"] .movementGroup{--circuit-accent:#c4af91;--circuit-bg:rgba(153,130,102,.07);--circuit-line:rgba(190,166,130,.24)}
 .movementGroup .circuitLabel{font-size:15px}
+
+/* v1.9.1: local, log-driven nudges and opt-in foreground phone alerts */
+.trainingNudges{margin:-5px 0 16px;border-radius:13px;border:1px solid color-mix(in srgb,var(--orange) 20%,var(--stroke));background:linear-gradient(110deg,color-mix(in srgb,var(--orange) 7%,var(--panel)),var(--panel));padding:10px 11px}
+.trainingNudges[hidden]{display:none}
+.nudgeHeading{font-size:10px;font-weight:850;letter-spacing:1.25px;color:var(--orange);display:flex;justify-content:space-between;margin-bottom:6px}
+.nudgeItem{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 0}
+.nudgeItem+.nudgeItem{border-top:1px solid var(--stroke)}
+.nudgeCopy{flex:1;min-width:0}
+.nudgeTitle{font-weight:750;font-size:12px;color:var(--text);margin-bottom:3px}
+.nudgeDetail{font-size:11px;color:var(--muted);line-height:1.3}
+.nudgeControls{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.nudgeControls button{border-radius:8px;border:1px solid var(--stroke);background:var(--panel2);color:var(--text);font-size:11px;padding:8px 7px}
+.nudgeControls .nudgeAction{border-color:color-mix(in srgb,var(--orange) 35%,var(--stroke));color:var(--orange);font-weight:750}
+.nudgeControls .nudgeDismiss{font-size:17px;color:var(--muted);padding:3px 7px;min-height:31px}
+.reminderSettings{padding:12px 0 15px;border-bottom:1px solid var(--stroke);margin-bottom:12px}
+.reminderSettings .fine{font-size:11px}
+@media(max-width:390px){.nudgeItem{align-items:flex-start;flex-direction:column}.nudgeControls{align-self:flex-end}}
 </style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody">
+<section class="reminderSettings" aria-label="Notification settings">
+ <div class="nudgeHeading"><span>REMINDERS</span></div>
+ <p class="fine">Smart reminders appear inside Era. Optional phone alerts work only while Era is open; reminders with the app closed require a future push service.</p>
+ <button class="btn small" type="button" id="enableOpenAlerts">Enable alerts while app is open</button>
+ <p class="fine" id="alertStatus" role="status">Phone alerts are off.</p>
+</section>
 <section class="themeSettings" aria-label="Appearance settings">
 <label for="eraThemeSelect" class="themePickerLabel">Themes <span class="themeChevron" aria-hidden="true">▾</span></label>
 <select id="eraThemeSelect" aria-label="Choose your app theme">
@@ -354,6 +377,10 @@ html[data-era-theme="medieval"] .movementGroup{--circuit-accent:#c4af91;--circui
     <button type="button" id="editWaterGoal" class="waterGoalEdit">Adjust goal</button>
   </div>
 </section>
+<section id="trainingNudges" class="trainingNudges" aria-label="Training reminders" hidden>
+  <div class="nudgeHeading"><span>TRAINING REMINDERS</span><span id="nudgeCounter" aria-hidden="true"></span></div>
+  <div id="nudgeList" aria-live="polite"></div>
+</section>
 <nav class="tabs folderTabs" role="tablist" aria-label="Training sections"><span class="folderSlider" aria-hidden="true"></span><button id="physicalTab" role="tab" aria-selected="true" aria-controls="physicalView">Physical</button><button id="nutritionTab" role="tab" aria-selected="false" aria-controls="nutritionView">Nutrition</button></nav><div id="physicalView" role="tabpanel"><div class="top physicalIntro"><div><div class="eyebrow">YOUR 16-WEEK PROGRAM</div><h1>Move with purpose.</h1><p class="sub">Climb · Strength · Cardio · Recovery</p></div><span class="pill">PHASE 01</span></div><div class="stats"><div class="stat"><small>WORKOUTS</small><b id="completed">0</b><small>this week</small></div><div class="stat"><small>CARDIO</small><b id="cardioSum">0</b><small>minutes this week</small></div><div class="stat"><small>PHASE</small><b id="phase">1</b><small>of 16 weeks</small></div></div><div class="week"><button class="btn small" id="prev" aria-label="Previous training week">‹</button><span id="weekLabel"></span><button class="btn small" id="next" aria-label="Next training week">›</button></div><div class="days" id="days"></div><section class="panel"><div class="heading"><div><div class="eyebrow" id="type"></div><h2 id="dayTitle"></h2></div><span class="pill" id="duration"></span></div><p class="focus" id="focus"></p><div class="heading"><small class="muted">SESSION COMPLETION</small><small id="progressLabel"></small></div><div class="bar"><div id="progressBar"></div></div><p class="fine" id="climbSafety" hidden>Finger training: start with a comfortable edge and plenty of foot support. No full-crimp, one-arm hangs or campus-board max efforts in this phase. Skip loaded finger drills with pain, tenderness or lingering soreness; progress slowly, not every session.</p><div id="exerciseList"></div><div class="cardio"><label><span>♥ Cardio minutes today <small class="muted" id="cardioGoal"></small></span><input type="number" min="0" max="240" step="1" inputmode="numeric" id="cardioInput" aria-label="Cardio minutes" /></label></div><div class="actions"><button class="btn main" id="finish">Mark session complete</button><button class="btn" id="clear">Reset today's checks</button></div></section><section class="panel"><h2 style="margin:0 0 8px">Progressive overload</h2><p class="sub">Each strength exercise shows your previous week's sets and recommends what to try next. Reach the top of the rep range with good form before increasing weight. These are suggestions, not requirements.</p><p class="fine">Log each set as you train. Empty fields mean unrecorded. For dumbbells, enter the weight of one dumbbell consistently. Never force a heavier lift on a fatigued day.</p></section></div><div id="nutritionView" role="tabpanel" hidden>
 <div class="nutritionhero"><div class="eyebrow">FUEL YOUR ATHLETIC ERA</div><h2>Nutrition</h2><p>Realistic food for climbing, cardio, muscle and recovery. Start with consistency, not perfection.</p><span class="pill">Personal starter plan</span></div>
 <section class="panel"><div class="heading"><h2>Today's nutrition</h2><span class="pill" id="nutritionDate"></span></div><p class="sub">Record your daily protein and water. Estimates are fine. Your entries save automatically on this phone.</p>
@@ -366,7 +393,7 @@ html[data-era-theme="medieval"] .movementGroup{--circuit-accent:#c4af91;--circui
 <section class="panel"><h2>Two meals worth repeating</h2><p><b>Easy protein Alfredo:</b> cook protein pasta; warm an Alfredo sauce with frozen spinach/peas, and stir in pre-cooked chicken or beans. Add pasta water to loosen.</p><p><b>Low-effort burrito bowl:</b> rice, black beans, pre-cooked chicken or tofu, frozen peppers, salsa and a little cheese.</p><p class="fine">No fixed calorie target yet. Start with consistent meals and adjust portions to your hunger and training.</p></section>
 </div>
 <div id="settingsHolder" hidden><section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.9.0';
+const APP_VERSION='1.9.1';
 const PLAN=[
 {d:'Mon',title:'Climb + Momo Arms / Shoulders / Abs',type:'CLIMBING',duration:'70–85 min',focus:'Warm fingers progressively, then climb first at a relaxed, technique-focused intensity. After climbing, complete three Momo-inspired circuits: two rounds each, moderate loads, about 45–60 seconds between rounds. Avoid training to failure so Tuesday dynos can stay sharp.',cardio:'5–8 min easy',ex:[['Easy bike + shoulder circles','5 min cardio and gentle arm movement','check'],['Technique bouldering','25–30 min easy/moderate; 3 silent-feet climbs + controlled hip turns; avoid max dynos today','check'],['Incline bench Arnold press','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Dumbbell lateral raises','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Hammer curls','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Dumbbell skull crushers','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Cable crunch','Circuit C: 2 × 15–20','lift',2,15,20,2.5,'CIRCUIT C · ABS · 2 ROUNDS'],['Decline reverse crunch','Circuit C: 2 × 10–15','check',0,0,0,0,'CIRCUIT C · ABS · 2 ROUNDS'],['Easy walk or bike','5–8 min at conversational pace','check'],['Finger tendon glides + wrist circles','10 smooth tendon glides and 10 wrist circles each direction; no forceful stretches','check'],['Feet-supported large-edge finger primer','3 × 7 sec on a comfortable 20–25 mm edge with feet on ground, open hand/half crimp, easy 3/10 effort; 30 sec rest','check'],['Scapular pulls on large jugs','2 × 5 reps; elbows mostly straight, shoulders engaged, feet-assisted as needed','check']]},
 {d:'Tue',title:'Dynos + Bouldering',type:'CLIMBING',duration:'55–65 min',focus:'Foot precision, explosive coordination and landing control. If hands, elbows or shoulders are fatigued after Monday, make this an easy technique session instead of max-power dynos.',cardio:'10 min easy',ex:[['Bike + very easy jug routes','5 min bike + 10 min big-hold climbing; gradually increase demand','check'],['Dyno timing and landing practice','4–6 high-quality attempts at submaximal intensity with 2–3 min rest; soft landing, stop as power fades','check'],['Coordination climbing','10–15 min: momentum from legs/hips, eyes on target, quiet catches','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check'],['Tendon glides + band shoulder warm-up','10 gentle finger glides + 10 band external rotations; avoid aggressive finger stretching','check'],['Feet-on edge recruitment','3 × 5 sec gently loading a large 20–25 mm edge, open hand or half crimp; no max effort','check'],['Silent-feet warm-up','2 easy traverses: place feet precisely without scraping or readjusting','check'],['Controlled deadpoint drill','3 × 3 moves: drive from toes, pause at the high point, catch comfortably','check']]},
@@ -577,6 +604,105 @@ applyEraTheme(storedEraTheme);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateSleepClock()});
  window.addEventListener('pageshow',updateSleepClock);
 })();
+
+
+/* Activity reminders use explicit logs. Never classify all cardio as running.
+   Only nudge lifts on their programmed days and never nag on rest day. */
+const REMINDER_KEY='athletic-era-reminders-v1';
+let reminderPrefs={};try{reminderPrefs=JSON.parse(localStorage.getItem(REMINDER_KEY)||'{}')||{}}catch(e){}
+if(!reminderPrefs.dismissed||typeof reminderPrefs.dismissed!=='object')reminderPrefs.dismissed={};
+if(!reminderPrefs.runLogs||typeof reminderPrefs.runLogs!=='object')reminderPrefs.runLogs={};
+function saveReminderPrefs(){try{localStorage.setItem(REMINDER_KEY,JSON.stringify(reminderPrefs))}catch(e){}}
+function dateDiffInDays(a,b){const aDay=new Date(a+'T12:00:00'),bDay=new Date(b+'T12:00:00');return Math.round((aDay-bDay)/86400000)}
+function dailyLiftStatus(dayCode,session){
+ const plan=PLAN.find(x=>x.d===dayCode);if(!plan||!session)return false;
+ const liftIndices=plan.ex.map((ex,i)=>ex[2]==='lift'?i:-1).filter(i=>i>=0);
+ // Only genuinely completed lifts, not unrelated climbing work.
+ return liftIndices.length>0&&(session.complete||liftIndices.every(i=>session.done?.[i]===true));
+}
+function todayNudges(){
+ const now=new Date(),todayCode=iso(now),dayCode=PLAN[(now.getDay()+6)%7].d;
+ const session=storage.sessions[todayCode]||{};
+ const n=[];
+ if(['Mon','Wed','Fri'].includes(dayCode)&&now.getHours()>=10&&!dailyLiftStatus(dayCode,session)){
+  n.push({id:'lift',title:'Your lifting is still waiting',detail:dayCode==='Mon'?'After your climb, tackle your shoulder, arm and ab circuits.':'Your strength session is scheduled today. Log it when you train.',action:'Open workout',target:dayCode});
+ }
+ const dates=Object.keys(reminderPrefs.runLogs).filter(d=>Number(reminderPrefs.runLogs[d])>0&&d<=todayCode).sort();
+ const last=dates[dates.length-1];
+ const gap=last?dateDiffInDays(todayCode,last):null;
+ // Show a nudge about running only when not already logged today and not on Sunday recovery.
+ if(dayCode!=='Sun'&&((gap!==null&&gap>=2)||(!last&&['Sat','Mon'].includes(dayCode)))){
+  n.push({id:'run',title:gap===null?'No runs logged yet':"No run logged in "+gap+" days",detail:'A short easy run counts. Prioritize recovery if your legs need it.',action:'Log run'});
+ }
+ return n.filter(item=>reminderPrefs.dismissed[todayCode+'|'+item.id]!==true);
+}
+function renderNudges(){
+ const root=$('trainingNudges'),list=$('nudgeList');if(!root||!list)return;
+ const nudges=todayNudges();root.hidden=nudges.length===0;
+ $('nudgeCounter').textContent=nudges.length?nudges.length+' ACTIVE':'';
+ list.replaceChildren();
+ for(const n of nudges){
+  const line=make('div',{class:'nudgeItem'},list),copy=make('div',{class:'nudgeCopy'},line);
+  make('div',{class:'nudgeTitle',text:n.title},copy);
+  make('div',{class:'nudgeDetail',text:n.detail},copy);
+  const controls=make('div',{class:'nudgeControls'},line);
+  const action=make('button',{class:'nudgeAction',type:'button',text:n.action},controls);
+  action.onclick=()=>{
+   if(n.id==='run'){
+    const input=prompt('Minutes of running today (not walking)?','20');
+    if(input===null)return;
+    const minutes=Number(input);
+    if(!Number.isFinite(minutes)||minutes<=0||minutes>240){alert('Enter a running time from 1 to 240 minutes.');return;}
+    const key=iso(new Date());
+    reminderPrefs.runLogs[key]=(Number(reminderPrefs.runLogs[key])||0)+minutes;
+    saveReminderPrefs();renderNudges();
+    // Run minutes count towards your saved cardio total, without falsely completing an unrelated exercise.
+    const day=PLAN[(new Date().getDay()+6)%7].d,entry=data(day,monday(new Date()));
+    entry.cardio=String((Number(entry.cardio)||0)+minutes);save();render();
+   }else{
+    switchTab('physical');selected=n.target;week=monday(new Date());render();document.getElementById('dayTitle')?.scrollIntoView({behavior:'smooth',block:'start'});
+   }
+  };
+  const dismiss=make('button',{class:'nudgeDismiss',type:'button','aria-label':'Dismiss reminder for today',text:'×'},controls);
+  dismiss.onclick=()=>{reminderPrefs.dismissed[iso(new Date())+'|'+n.id]=true;saveReminderPrefs();renderNudges()};
+ }
+}
+function updateOpenAlertsUI(){
+ const supported='Notification' in window&&'serviceWorker' in navigator;
+ const enabled=reminderPrefs.openAlerts===true&&Notification.permission==='granted';
+ $('enableOpenAlerts').textContent=enabled?'Turn off app-open alerts':'Enable alerts while app is open';
+ $('enableOpenAlerts').disabled=!supported;
+ $('alertStatus').textContent=!supported?'Notifications unavailable in this browser.':enabled?'Enabled only while Era is open.':Notification.permission==='denied'?'Notifications blocked in browser settings.':'Phone alerts are off.';
+}
+$('enableOpenAlerts').onclick=async()=>{
+ if(reminderPrefs.openAlerts){
+  reminderPrefs.openAlerts=false;saveReminderPrefs();updateOpenAlertsUI();return;
+ }
+ if(!('Notification' in window))return;
+ const permission=await Notification.requestPermission();
+ if(permission==='granted'){reminderPrefs.openAlerts=true;saveReminderPrefs();}
+ updateOpenAlertsUI();
+ if(permission==='granted')maybeNotifyOnOpen();
+};
+async function maybeNotifyOnOpen(){
+ if(!reminderPrefs.openAlerts||document.hidden||!('Notification' in window)||Notification.permission!=='granted')return;
+ const now=new Date(),key=iso(now);
+ if(reminderPrefs.lastAlertDate===key)return;
+ const n=todayNudges()[0];
+ if(!n)return;
+ try{
+  const reg=await navigator.serviceWorker?.ready;
+  if(!reg)return;
+  await reg.showNotification('Athletic Era · '+n.title,{body:n.detail,tag:'athletic-era-daily-reminder',icon:'./icon.svg'});
+  reminderPrefs.lastAlertDate=key;saveReminderPrefs();
+ }catch(e){$('alertStatus').textContent='Could not show phone alert on this device.';}
+}
+const oldRender=render;
+// Render nudges whenever logged workouts change without modifying core workout logic.
+render=function(){oldRender();renderNudges()};
+renderNudges();updateOpenAlertsUI();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderNudges();maybeNotifyOnOpen()}});
+window.addEventListener('pageshow',()=>{renderNudges();maybeNotifyOnOpen()});
 
 renderNutrition();
 render();
