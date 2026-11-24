@@ -341,7 +341,56 @@ html[data-era-theme="solarpunk"] .warmupGroup,
 html[data-era-theme="medieval"] .warmupGroup{--circuit-accent:#efd077;--circuit-bg:rgba(220,177,55,.085);--circuit-line:rgba(235,197,92,.29)}
 .warmupGroup .circuitLabel{font-size:16px}
 #dayTitle{font-size:clamp(21px,5vw,26px);line-height:1.2}
-</style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true"><div class="shell"><h2>Settings</h2><button id="closeDrawer" class="gear" aria-label="Close settings">×</button></div><p class="fine">Swipe right to close</p><div id="settingsBody">
+
+/* v1.10.0: side drawer navigation, weekly review, collapsed settings */
+.drawerNav{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:15px 0 18px}
+.drawerNav button{border:1px solid var(--stroke);background:var(--panel2);border-radius:10px;color:var(--muted);font-size:13px;font-weight:750;padding:11px 6px}
+.drawerNav button[aria-current="page"]{border-color:var(--orange);color:var(--text);background:color-mix(in srgb,var(--orange) 12%,var(--panel))}
+.settingAccordion{margin:9px 0;border:1px solid var(--stroke);border-radius:12px;background:var(--panel2);overflow:hidden}
+.settingAccordionTitle{list-style:none;cursor:pointer;font-size:14px;font-weight:800;color:var(--text);padding:15px 13px;display:flex;align-items:center;justify-content:space-between}
+.settingAccordionTitle::-webkit-details-marker{display:none}
+.settingAccordionTitle:after{content:"⌄";font-size:20px;color:var(--orange);line-height:1;transition:transform .2s}
+.settingAccordion[open]>.settingAccordionTitle:after{transform:rotate(180deg)}
+.settingAccordionBody{padding:0 12px 12px;border-top:1px solid var(--stroke)}
+.settingAccordionBody>.panel{margin:0;border:0;padding:12px 0 0;background:transparent}
+.settingAccordionBody>.reminderSettings{border:0;padding:12px 0 0;margin:0}
+.settingAccordionBody>.themeSettings{padding-top:12px}
+.settingAccordionBody .themePickerLabel{display:none}
+.reviewWeekSwitch{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--stroke);border-radius:12px;background:var(--panel2);margin-bottom:12px;padding:6px}
+.reviewWeekSwitch button{border:0;border-radius:8px;background:var(--panel);color:var(--text);font-size:23px;min-width:35px;min-height:35px}
+.reviewWeekSwitch button:disabled{opacity:.25}
+.reviewWeekSwitch strong{font-size:12px;text-align:center}
+.reviewIntro{padding:15px;border-radius:13px;background:linear-gradient(135deg,color-mix(in srgb,var(--orange) 15%,var(--panel)),var(--panel));border:1px solid var(--stroke)}
+.reviewEyebrow{color:var(--orange);font-size:10px;font-weight:850;letter-spacing:1.4px}
+.reviewIntro h3{font-size:23px;margin:6px 0}
+.reviewIntro p{font-size:12px;margin:0}
+.reviewStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 18px}
+.reviewStat{display:flex;flex-direction:column;gap:3px;background:var(--panel2);padding:12px;border:1px solid var(--stroke);border-radius:12px;min-width:0}
+.reviewStatLabel{color:var(--muted);font-size:11px;font-weight:700}
+.reviewStat strong{color:var(--text);font-size:22px;line-height:1.2}
+.reviewStat small{color:var(--muted);font-size:10px}
+.reviewDays h3{font-size:15px;margin:0 0 7px}
+.reviewDay{display:flex;gap:8px;align-items:center;padding:10px 3px;border-bottom:1px solid var(--stroke)}
+.reviewDayName{font-weight:800;font-size:12px;width:30px}
+.reviewDayDetail{font-size:12px;flex:1;color:var(--muted)}
+.reviewDot{width:7px;height:7px;background:var(--stroke);border-radius:50%}
+.reviewDot.active{background:var(--green)}
+.reviewFootnote{font-size:11px;line-height:1.5;color:var(--muted);margin:14px 2px}
+@media(prefers-reduced-motion:reduce){.settingAccordionTitle:after{transition:none}}
+</style><script src="./ascii-coffee-mug.js"></script></head><body><div id="shade" class="shade"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Athletic Era menu" aria-hidden="true"><div class="shell"><h2 id="drawerTitle">Menu</h2><button id="closeDrawer" class="gear" aria-label="Close menu">×</button></div>
+<nav class="drawerNav" aria-label="Menu pages">
+  <button id="weeklyReviewNav" type="button" aria-current="page">Weekly Review</button>
+  <button id="drawerSettingsNav" type="button">Settings</button>
+</nav>
+<section id="weeklyReviewPage" aria-label="Weekly training review">
+  <div class="reviewWeekSwitch">
+    <button id="reviewPrev" type="button" aria-label="Previous review week">‹</button>
+    <strong id="reviewWeekLabel"></strong>
+    <button id="reviewNext" type="button" aria-label="Next review week">›</button>
+  </div>
+  <div id="reviewContent" aria-live="polite"></div>
+</section>
+<div id="settingsBody" hidden>
 <section class="reminderSettings" aria-label="Notification settings">
  <div class="nudgeHeading"><span>REMINDERS</span></div>
  <p class="fine">Smart reminders appear inside Era. Optional phone alerts work only while Era is open; reminders with the app closed require a future push service.</p>
@@ -403,7 +452,7 @@ html[data-era-theme="medieval"] .warmupGroup{--circuit-accent:#efd077;--circuit-
 <section class="panel"><h2>Two meals worth repeating</h2><p><b>Easy protein Alfredo:</b> cook protein pasta; warm an Alfredo sauce with frozen spinach/peas, and stir in pre-cooked chicken or beans. Add pasta water to loosen.</p><p><b>Low-effort burrito bowl:</b> rice, black beans, pre-cooked chicken or tofu, frozen peppers, salsa and a little cheese.</p><p class="fine">No fixed calorie target yet. Start with consistent meals and adjust portions to your hunger and training.</p></section>
 </div>
 <div id="settingsHolder" hidden><section class="panel" id="appUpdates"><div class="heading"><div><div class="eyebrow">LIVE APP UPDATES</div><h2 style="margin:4px 0">Updates without reinstalling</h2></div><span class="pill" id="appVersion">v1.1</span></div><p class="sub" id="updateStatus" role="status" aria-live="polite">When this app is installed from a hosted website, future changes arrive from the same address. Your workout logs stay on this device.</p><div class="actions"><button class="btn" id="checkUpdate">↻ Check for update</button><button class="btn main" id="applyUpdate" hidden>Install available update</button></div><p class="fine">This checks the site where your app is hosted. It cannot receive changes from ChatGPT automatically; the updated files must first be published to that same site. Export a backup before major plan changes.</p></section><section class="panel" id="dataSettings"><h2 style="margin:0 0 8px">Your data</h2><p class="sub">Saved automatically on this device. Export a backup regularly, especially before clearing browser data or changing phones.</p><div class="actions"><button class="btn" id="export">↓ Export backup</button><label for="importFile" class="btn" style="cursor:pointer">↑ Import backup</label><input id="importFile" type="file" accept="application/json,.json"><button class="btn" id="exportCsv">↓ Workout CSV</button></div></section></div><footer><p class="fine">Train with control. Warm up before dynos; don't attempt max-power climbing while fatigued. A gradual aerobic buildup supports cardiovascular health.</p><p class="fine">Offline-ready once installed from an HTTPS host. This standalone app stores data only in the browser on your device; it does not sync between devices.</p></footer></main><script>
-const APP_VERSION='1.9.2';
+const APP_VERSION='1.10.0';
 const PLAN=[
 {d:'Mon',title:'Climbing + Arms & Abs',type:'CLIMBING',duration:'70–85 min',focus:'Warm fingers progressively, then climb first at a relaxed, technique-focused intensity. After climbing, complete three Momo-inspired circuits: two rounds each, moderate loads, about 45–60 seconds between rounds. Avoid training to failure so Tuesday dynos can stay sharp.',cardio:'5–8 min easy',ex:[['Easy bike + shoulder circles','5 min cardio and gentle arm movement','check'],['Technique bouldering','25–30 min easy/moderate; 3 silent-feet climbs + controlled hip turns; avoid max dynos today','check'],['Incline bench Arnold press','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Dumbbell lateral raises','Circuit A: 2 × 10–12','lift',2,10,12,2.5,'CIRCUIT A · SHOULDERS · 2 ROUNDS'],['Hammer curls','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Dumbbell skull crushers','Circuit B: 2 × 12–15','lift',2,12,15,2.5,'CIRCUIT B · ARMS · 2 ROUNDS'],['Cable crunch','Circuit C: 2 × 15–20','lift',2,15,20,2.5,'CIRCUIT C · ABS · 2 ROUNDS'],['Decline reverse crunch','Circuit C: 2 × 10–15','check',0,0,0,0,'CIRCUIT C · ABS · 2 ROUNDS'],['Easy walk or bike','5–8 min at conversational pace','check'],['Finger tendon glides + wrist circles','10 smooth tendon glides and 10 wrist circles each direction; no forceful stretches','check'],['Feet-supported large-edge finger primer','3 × 7 sec on a comfortable 20–25 mm edge with feet on ground, open hand/half crimp, easy 3/10 effort; 30 sec rest','check'],['Scapular pulls on large jugs','2 × 5 reps; elbows mostly straight, shoulders engaged, feet-assisted as needed','check']]},
 {d:'Tue',title:'Climbing + Dynos',type:'CLIMBING',duration:'55–65 min',focus:'Foot precision, explosive coordination and landing control. If hands, elbows or shoulders are fatigued after Monday, make this an easy technique session instead of max-power dynos.',cardio:'10 min easy',ex:[['Bike + very easy jug routes','5 min bike + 10 min big-hold climbing; gradually increase demand','check'],['Dyno timing and landing practice','4–6 high-quality attempts at submaximal intensity with 2–3 min rest; soft landing, stop as power fades','check'],['Coordination climbing','10–15 min: momentum from legs/hips, eyes on target, quiet catches','check'],['Overhang technique','15 min hips / precise feet','check'],['Easy bike or walk','10 min','check'],['Tendon glides + band shoulder warm-up','10 gentle finger glides + 10 band external rotations; avoid aggressive finger stretching','check'],['Feet-on edge recruitment','3 × 5 sec gently loading a large 20–25 mm edge, open hand or half crimp; no max effort','check'],['Silent-feet warm-up','2 easy traverses: place feet precisely without scraping or readjusting','check'],['Controlled deadpoint drill','3 × 3 moves: drive from toes, pause at the high point, catch comfortably','check']]},
@@ -532,8 +581,109 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
     if(!document.hidden&&swRegistration)swRegistration.update().catch(()=>{});
   });
 }else updateMessage('Use the downloadable file offline, or host the app on HTTPS to get future updates without reinstalling.');
-const drawerEl=$('drawer');for(const s of Array.from(document.querySelectorAll('#settingsHolder > section')))$('settingsBody').append(s);$('settingsHolder').remove();
-function toggleDrawer(on){document.body.classList.toggle('drawer-open',on);drawerEl.setAttribute('aria-hidden',String(!on))}
+const drawerEl=$('drawer');
+for(const s of Array.from(document.querySelectorAll('#settingsHolder > section')))$('settingsBody').append(s);
+$('settingsHolder').remove();
+// Wrap each settings category as one compact accessible accordion.
+const settingsGroups=[
+ {selector:'.reminderSettings',title:'Reminders'},
+ {selector:'.themeSettings',title:'Themes'},
+ {selector:'#appUpdates',title:'App updates'},
+ {selector:'#dataSettings',title:'Your data'}
+];
+for(const spec of settingsGroups){
+ const section=$('settingsBody').querySelector(spec.selector);
+ if(!section)continue;
+ const details=document.createElement('details');details.className='settingAccordion';
+ const summary=document.createElement('summary');summary.className='settingAccordionTitle';summary.textContent=spec.title;
+ const content=document.createElement('div');content.className='settingAccordionBody';
+ section.parentNode.insertBefore(details,section);
+ details.append(summary,content);content.append(section);
+}
+let reviewWeekOffset=0;
+function switchDrawerPage(name){
+ const isReview=name==='review';
+ $('weeklyReviewPage').hidden=!isReview;
+ $('settingsBody').hidden=isReview;
+ $('weeklyReviewNav').setAttribute('aria-current',isReview?'page':'false');
+ $('drawerSettingsNav').setAttribute('aria-current',isReview?'false':'page');
+ $('drawerTitle').textContent=isReview?'Weekly Review':'Settings';
+ if(isReview)renderWeeklyReview();
+ drawerEl.scrollTop=0;
+}
+$('weeklyReviewNav').onclick=()=>switchDrawerPage('review');
+$('drawerSettingsNav').onclick=()=>switchDrawerPage('settings');
+$('reviewPrev').onclick=()=>{reviewWeekOffset--;renderWeeklyReview()};
+$('reviewNext').onclick=()=>{if(reviewWeekOffset<0)reviewWeekOffset++;renderWeeklyReview()};
+function reviewWeekStart(){
+ const d=monday(new Date());d.setDate(d.getDate()+reviewWeekOffset*7);return d;
+}
+function reviewCard(label,value,detail){
+ const box=make('div',{class:'reviewStat'},$('reviewStats'));
+ make('span',{class:'reviewStatLabel',text:label},box);
+ make('strong',{text:String(value)},box);
+ if(detail)make('small',{text:detail},box);
+}
+function renderWeeklyReview(){
+ const root=$('reviewContent');if(!root)return;
+ const begin=reviewWeekStart(),end=new Date(begin);end.setDate(end.getDate()+6);
+ $('reviewWeekLabel').textContent=begin.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+end.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+ $('reviewNext').disabled=reviewWeekOffset>=0;
+ root.replaceChildren();
+ const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+ let completed=0,climbDays=0,liftDays=0,liftSets=0,cardioMinutes=0,runMinutes=0,protein=0,water=0,proteinDays=0,waterDays=0,activityDays=0;
+ const dayData=[];
+ for(let i=0;i<7;i++){
+  const d=new Date(begin);d.setDate(d.getDate()+i);const date=iso(d);
+  const plan=PLAN[i],s=storage.sessions?.[date]||{},done=s.done||{};
+  const finished=!!s.complete;
+  const doneCount=plan.ex.reduce((n,_,j)=>n+(done[j]?1:0),0);
+  const enteredSets=Object.entries(s.sets||{}).reduce((n,[index,sets])=>n+(plan.ex[Number(index)]?.[2]==='lift'&&Array.isArray(sets)?sets.filter(x=>x&&Number(x.reps)>0&&x.weight!==''&&x.weight!==undefined).length:0),0);
+  const lifted=finished&&plan.ex.some(x=>x[2]==='lift')||enteredSets>0||plan.ex.some((x,j)=>x[2]==='lift'&&done[j]);
+  const climbed=plan.type==='CLIMBING'&&(finished||(i===0?!!done[1]:i===1?[1,2,3].some(j=>done[j]):[1,2,3].some(j=>done[j])));
+  const minutes=Number(s.cardio)||0;
+  const dailyNutrition=storage.nutrition?.[date]?.entries||[];
+  const dp=dailyNutrition.reduce((n,x)=>n+(Number(x.protein)||0),0),dw=Math.max(0,dailyNutrition.reduce((n,x)=>n+(Number(x.water)||0),0));
+  if(dp>0)proteinDays++;
+  if(dw>0)waterDays++;
+  protein+=dp;water+=dw;
+  const run=Number(reminderPrefs?.runLogs?.[date])||0;
+  const hasActivity=finished||doneCount>0||enteredSets>0||minutes>0||run>0;
+  if(hasActivity)activityDays++;
+  if(finished)completed++;
+  if(climbed)climbDays++;
+  if(lifted)liftDays++;
+  liftSets+=enteredSets;
+  cardioMinutes+=minutes;
+  runMinutes+=run;
+  dayData.push({date,day:dayNames[i],doneCount,total:plan.ex.length,finished,climbed,lifted,run,minutes,hasActivity,isFuture:date>iso(new Date())});
+ }
+ const intro=make('div',{class:'reviewIntro'},root);
+ make('div',{class:'reviewEyebrow',text:reviewWeekOffset===0?'THIS WEEK SO FAR':'WEEKLY SUMMARY'},intro);
+ make('h3',{text:completed+' completed session'+(completed===1?'':'s')},intro);
+ make('p',{text:activityDays+' of 7 days have logged activity. Only saved workouts and entries count.'},intro);
+ const stats=make('div',{class:'reviewStats',id:'reviewStats'},root);
+ const stat=(label,value,detail)=>{const box=make('div',{class:'reviewStat'},stats);make('span',{class:'reviewStatLabel',text:label},box);make('strong',{text:String(value)},box);if(detail)make('small',{text:detail},box)};
+ stat('Climbing',climbDays,'days logged');
+ stat('Lifting',liftDays,'days logged');
+ stat('Strength sets',liftSets,'sets with reps + weight');
+ stat('Cardio',cardioMinutes+'m','logged minutes');
+ stat('Running',runMinutes+'m','explicit run logs');
+ stat('Protein',Math.round(protein)+'g',proteinDays+' logged days');
+ stat('Water',Math.round(water/29.5735295625)+' oz',waterDays+' logged days');
+ const section=make('section',{class:'reviewDays'},root);
+ make('h3',{text:'Day by day'},section);
+ for(const item of dayData){
+  const line=make('div',{class:'reviewDay'},section);
+  make('span',{class:'reviewDayName',text:item.day},line);
+  const detail=item.isFuture?'Upcoming':item.finished?'Session completed':item.climbed&&item.lifted?'Climbed + lifted':item.climbed?'Climbing logged':item.lifted?'Lifting logged':item.run>0?'Run '+item.run+' min':item.doneCount>0?item.doneCount+' exercises checked':item.minutes>0?'Cardio '+item.minutes+' min':'No activity logged';
+  make('span',{class:'reviewDayDetail',text:detail},line);
+  make('span',{class:'reviewDot'+(item.hasActivity?' active':'')},line);
+ }
+ make('p',{class:'reviewFootnote',text:'Cardio is whatever you entered under cardio minutes; running is counted separately only when explicitly logged. Set totals exclude unfilled fields. This review is stored only on this device.'},root);
+}
+
+function toggleDrawer(on){document.body.classList.toggle('drawer-open',on);drawerEl.setAttribute('aria-hidden',String(!on));if(on)switchDrawerPage('review')}
 $('openDrawer').onclick=()=>toggleDrawer(true);$('closeDrawer').onclick=()=>toggleDrawer(false);$('shade').onclick=()=>toggleDrawer(false);document.addEventListener('keydown',e=>{if(e.key==='Escape')toggleDrawer(false)});
 function switchTab(n){const nutrition=n==='nutrition';$('physicalView').hidden=nutrition;$('nutritionView').hidden=!nutrition;$('physicalTab').setAttribute('aria-selected',String(!nutrition));$('nutritionTab').setAttribute('aria-selected',String(nutrition));document.querySelector('.folderTabs').classList.toggle('nutritionSelected',nutrition);const shown=nutrition?$('nutritionView'):$('physicalView');shown.classList.remove('paneEnter');void shown.offsetWidth;shown.classList.add('paneEnter')}
 $('physicalTab').onclick=()=>switchTab('physical');$('nutritionTab').onclick=()=>switchTab('nutrition');
